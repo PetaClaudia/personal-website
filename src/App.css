@@ -1,0 +1,27 @@
+:root {
+  --primary: #EB6D6F;
+}
+
+.App {
+  min-height: 100vh;
+  background-color: var(--primary);
+}
+
+.section {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* #home {
+  background: linear-gradient(135deg, #517338 0%, #2d1810 100%);
+}
+
+#contact {
+  background: linear-gradient(135deg, #2d1810 0%, #1a1a1a 100%);
+} */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
