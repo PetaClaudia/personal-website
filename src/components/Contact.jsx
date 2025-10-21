@@ -1,12 +1,39 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import COLOURS from '../constants/colours';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   const textRef = useRef(null);
   const lettersRef = useRef([]);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas to full size
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const spacingX = 6;
+      const outsideColor = COLOURS.springGreen;
+      
+      // Draw vertical lines (all as outside/background lines)
+      ctx.strokeStyle = outsideColor;
+      ctx.lineWidth = 1.5;
+      
+      for (let x = 0; x < canvas.width; x += spacingX) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const letters = lettersRef.current;
@@ -51,7 +78,18 @@ const Contact = () => {
 
   return (
     <section className="section" id="contact">
-      <div className="flex items-center justify-center h-full">
+      <canvas 
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0
+        }}
+      />
+      <div className="flex items-center justify-center h-full" style={{ position: 'relative', zIndex: 1 }}>
         <h2 
           ref={textRef}
           className="font-poiret text-7xl md:text-8xl lg:text-9xl text-portfolio-red"

@@ -1,9 +1,9 @@
 export const COLOURS = {
-  peach: '#EB6D6F',
-  yellow: '#EBAC6C',
-  fluroYellow: '#EBEB69',
-  portfolioRed: '#8C2318',
-  portfolioYellow: '#F2C45A',
+  pinkCocktail: '#FF4E50',
+  showMeYourHeart: '#FC913A',
+  aboveYellow: '#F9D423',
+  giveYourHeart: '#EDE574',
+  springGreen: '#E1F5C4',
 };
 
 export default COLOURS;

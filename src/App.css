@@ -1,5 +1,6 @@
 :root {
   --primary: #EB6D6F;
+  --red: rgb(255, 19, 62);
 }
 
 .App {
@@ -14,13 +15,13 @@
   overflow: hidden;
 }
 
-/* #home {
-  background: linear-gradient(135deg, #517338 0%, #2d1810 100%);
+#home {
+  background: #FC913A;
 }
 
 #contact {
-  background: linear-gradient(135deg, #2d1810 0%, #1a1a1a 100%);
-} */
+  background: #FC913A;
+}
 
 .perspective-1000 {
   perspective: 1000px;
