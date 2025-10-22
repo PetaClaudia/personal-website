@@ -123,7 +123,7 @@ const Home = () => {
   // }, []);
 
   return (
-    <section ref={containerRef} className="section" id="home">
+    <div className="about-container" ref={containerRef} id="home">
       <canvas 
         ref={canvasRef}
         id="art" 
@@ -204,7 +204,7 @@ const Home = () => {
           />
         </div> */}
       {/* </div> */}
-    </section>
+    </div>
   );
 };
 
