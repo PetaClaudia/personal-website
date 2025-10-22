@@ -1,11 +1,5 @@
-:root {
-  --primary: #EB6D6F;
-  --red: rgb(255, 19, 62);
-}
-
 .App {
   min-height: 100vh;
-  background-color: var(--red);
 }
 
 .section {
@@ -15,82 +9,66 @@
   overflow: hidden;
 }
 
-#contact {
-  background: #FC913A;
-}
-
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-/* Draggable Text Component Styles */
-.draggable-text-container {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  height: 100%;
-  margin: 0 auto;
-}
-
-.draggable-svg-container {
-  position: relative;
-  width: 100%;
-  background-color: transparent;
-  padding: 30px;
-  border-radius: 8px;
-}
-
-.draggable-svg-container svg {
-  width: 100%;
-  height: auto;
-  overflow: visible !important;
-}
-
-.draggable-svg-container svg path {
-  fill: #f2e8cf;
-  cursor: grab;
-  transition: opacity 0.2s ease;
-}
-
-.draggable-svg-container svg path:hover {
-  opacity: 0.8;
-}
-
-.draggable-svg-container svg path:active {
-  cursor: grabbing;
-}
-
-.draggable-tooltip {
-  position: fixed;
-  background-color: #424769;
-  color: #f2e8cf;
-  padding: 5px 10px;
-  border-radius: 4px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  pointer-events: none;
-  white-space: nowrap;
-  z-index: 10;
-  font-size: 14px;
-}
-
-.draggable-tooltip::before {
-  content: "";
+/* Icons*/
+.icon {
   position: absolute;
-  left: -5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-right: 5px solid #424769;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Space between icon and label */
+  width: 100px;
+  height: auto;
 }
 
-.draggable-instructions {
-  color: #f2e8cf;
-  margin-top: 20px;
-  text-align: center;
-  font-family: Arial, sans-serif;
+/* Text under Icons */
+.icon-label {
+  background: white;
+  padding: 0px 2px;
+  font-family: "Chicago", monospace;
+  font-size: 12px;
+  text-align: center; /* Center the text */
+  width: fit-content; /* Make the label only as wide as its content */
+  margin-top: -5px; 
+}
+
+/* Mac icon specific positioning */
+#mac-icon {
+  top: 40px;
+  right: 20px;
+}
+
+/* Trash icon specific positioning */
+#trash-icon {
+  top: 620px;
+  right: 20px;
+}
+
+/* Bomb icon specific positioning */
+#bomb-icon {
+  top: 160px;
+  right: 20px;
+}
+
+/* Date display in top right */
+#name {
+  position: absolute;
+  font-size: 12px;
+  top: 4px;
+  left: 20px;
+}
+
+/* Date display in top right */
+#date {
+  position: absolute;
+  font-size: 12px;
+  top: 4px;
+  right: 20px;
+}
+
+/* Job title display in top centre */
+#job-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  top: 4px;
 }

@@ -73,7 +73,6 @@
     ), /* Dithered window content background */
     #fff; /* Base white background */
   --windowShadow: 0 0 0 1px #000, 2px 2px 0 #000; /* Classic Mac window shadow */
-  position: relative;
 }
 
 /* SVG filter for dithering effect - makes images look pixelated */
@@ -469,22 +468,4 @@
   opacity: 1;
 }
 
-/* Mac icon in top right corner */
-#icon {
-  top: 40px;
-  right: 40px;
-  position: absolute;
-}
 
-#icon img {
-  width: 30px;
-  height: auto;
-}
-
-/* Date display in top right */
-#date {
-  position: absolute;
-  font-size: 12px;
-  top: 7px;
-  right: 10px;
-}

@@ -467,7 +467,7 @@ const About = () => {
 
       {/* Classic Mac icon in top right corner */}
       <div id="icon">
-        <img src="https://assets.codepen.io/383755/Mac.svg" alt="" />
+        <img src="/assets/Mac.svg" alt="Classic Mac Icon" />
       </div>
     </div>
   );
