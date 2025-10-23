@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
-import COLOURS from '../constants/colours';
 
 const Home = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [date, setDate] = useState("");
+  const [showWelcome, setShowWelcome] = useState(true);
 
   // Set up current date and time display
   useEffect(() => {
@@ -56,19 +56,30 @@ const Home = () => {
         <div className="icon-label">Skills</div>
       </div>
 
+      {/* Welcome Panel */}
+      {showWelcome && (
+        <div className="welcome-panel">
+          <div className="welcome-content">
+            <h1>Welcome!</h1>
+            <p>I am a Software Developer with 5 years of backend experience, developing and maintaining enterprise applications and eServices. <br />
+              Off the clock I'm using web development to explore my creative side, building visually engaging, interactive sites. <br />
+              Please take a look around!</p>
+          </div>
+          <div className="welcome-footer">
+            <button
+              className="welcome-button"
+              onClick={() => setShowWelcome(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       <canvas
         ref={canvasRef}
         id="art"
-        style={{
-          display: 'block',
-          margin: '0 auto',
-          maxWidth: '100%',
-          height: 'auto',
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)'
-        }}
+        className="art-canvas"
       />
     </div>
   );
