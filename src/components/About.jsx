@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import "./About.css";
+import "../App.css";
 
 // Register the Draggable plugin for GSAP
 gsap.registerPlugin(Draggable);
@@ -147,17 +148,54 @@ const About = () => {
      * Set up GSAP Draggable functionality
      * Makes all windows draggable within the container bounds
      */
+    // Track the highest z-index to ensure proper layering
+    let highestZ = 100; // Start from a base z-index
+
     const setupDraggable = () => {
-      if (containerRef.current) {
-        try {
-          Draggable.create(".window, .nowplaying, .analyzer", {
-            bounds: containerRef.current, // Constrain dragging to container
-            type: "x,y", // Allow dragging in both directions
-            inertia: true, // Add momentum to dragging
+      try {
+        // Function to bring a window to the front
+        const bringToFront = (element) => {
+          // Find the current highest z-index among all windows
+          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer');
+          let currentHighest = 0;
+          allWindows.forEach(win => {
+            const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
+            if (z > currentHighest) currentHighest = z;
           });
-        } catch (error) {
-          console.warn("Draggable setup failed:", error);
-        }
+          
+          // Set the new z-index to be higher than the current highest
+          const newZ = Math.max(highestZ, currentHighest) + 1;
+          highestZ = newZ;
+          gsap.set(element, { zIndex: newZ });
+        };
+
+        // Initialize all draggables with proper z-index management
+        const draggableSelectors = ['.window', '.nowplaying', '.analyzer'];
+        
+        // First pass: Set initial z-index for all windows
+        draggableSelectors.forEach((selector, index) => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            gsap.set(el, { zIndex: highestZ + index });
+          });
+        });
+        
+        // Second pass: Make them draggable
+        draggableSelectors.forEach(selector => {
+          Draggable.create(selector, {
+            type: 'x,y',
+            bounds: 'body',
+            edgeResistance: 0.65,
+            onPress: function() {
+              bringToFront(this.target);
+            },
+            onDragStart: function() {
+              bringToFront(this.target);
+            }
+          });
+        });
+      } catch (error) {
+        console.warn("Draggable setup failed:", error);
       }
     };
 
@@ -338,10 +376,7 @@ const About = () => {
   };
 
   return (
-    <div className="about-container" ref={containerRef}>
-      {/* Current date display in top right corner */}
-      <div id="date">{date}</div>
-
+    <div ref={containerRef}>
       {/* Top row containing Now Playing and Visualizer windows */}
       <div className="toprow">
         {/* Now Playing window - shows current track info and controls */}
@@ -464,11 +499,6 @@ const About = () => {
           </feComponentTransfer>
         </filter>
       </svg>
-
-      {/* Classic Mac icon in top right corner */}
-      <div id="icon">
-        <img src="/assets/Mac.svg" alt="Classic Mac Icon" />
-      </div>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 :root {
   --black: #000;
   --white: #fff;
+  --darkGrey: #555;
+  --lightGrey: #ccc;
 }
 
 .App {
@@ -12,6 +14,106 @@
   width: 100%;
   position: relative;
   overflow: hidden;
+}
+
+/* Import Chicago font - the classic Macintosh system font */
+@import url("https://fonts.cdnfonts.com/css/chicago-2");
+
+/* Main container for the entire retro Macintosh interface */
+.interface-container {
+  position: relative;
+  display: grid;
+  padding: 50px;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  place-content: center;
+  min-height: 100vh;
+  font-family: "Chicago", monospace; /* Use Chicago font with monospace fallback */
+  /* Create the classic Macintosh dithered background pattern */
+  background: linear-gradient(
+      to bottom,
+      var(--black) 2px,
+      var(--white) 2px,
+      var(--white) 24px,
+      var(--black) 24px,
+      var(--black) 26px,
+      transparent 26px
+    ),/*Top bar*/
+    radial-gradient(circle at center, var(--black) 1px, var(--white) 0.5px, var(--white) 2px) 0 0 / 2px
+      2px repeat; /*Dithered background*/
+  /* Custom cursor definitions - classic Macintosh arrow cursors */
+  --default: url("data:image/svg+xml,%3Csvg width='10' height='46' viewBox='0 0 48 84' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6 3V6H9H12V9V12H15H18V15V18H21H24V21V24H27H30V27V30H33H36V33V36H39H42V39V42H45H48V45V48H39H30V54V60H33H36V66V72H39H42V78V84H36H30V78V72H27H24V66V60H21H18V57V54H15H12V57V60H9H6V63V66H3H0V33V0H3H6V3Z' fill='black'/%3E%3C/svg%3E%0A")
+      16 16,
+    pointer;
+  --pointer: url("data:image/svg+xml,%3Csvg width='15' height='29' viewBox='0 0 90 114' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M42 3V6H45H48V21V36H54H60V39V42H66H72V45V48H78H84V51V54H87H90V69V84H87H84V90V96H81H78V105V114H75H72V105V96H75H78V90V84H81H84V69V54H78H72V51V48H66H60V45V42H51H42V24V6H36H30V36V66H27H24V60V54H21H18V51V48H12H6V51V54H9H12V60V66H15H18V75V84H21H24V90V96H27H30V99V102H33H36V108V114H33H30V108V102H27H24V99V96H21H18V90V84H15H12V75V66H9H6V60V54H3H0V48V42H9H18V45V48H21H24V27V6H27H30V3V0H36H42V3Z' fill='black'/%3E%3Cpath d='M72 114V105V96H75H78V90V84H81H84V69V54H78H72V51V48H66H60V45V42H51H42V24V6H36H30V36V66H27H24V60V54H21H18V51V48H12H6V51V54H9H12V60V66H15H18V75V84H21H24V90V96H27H30V99V102H33H36V108V114H72Z' fill='white'/%3E%3C/svg%3E%0A")
+      16 16,
+    pointer;
+  cursor: var(--default); /* Apply the default cursor */
+  
+  /* Background pattern definitions for different UI elements */
+  --darkBg: radial-gradient(circle at center, var(--black) 1px, var(--darkGrey) 1px, var(--darkGrey) 2px) 0 0 /
+    2px 2px; /* Dark dithered background for contrast areas */
+  --lightBg: radial-gradient(circle at center, var(--lightGrey) 0.5px, var(--white) 0.5px, var(--white) 2px)
+    0 0 / 2px 2px; /* Light dithered background for window content */
+  /* Complex window background - recreates the classic Macintosh window appearance */
+  --windowBg: linear-gradient(to right, var(--white), var(--white)) 6.5px 7px / 9px 9px
+      no-repeat, /* Window close button area */
+    linear-gradient(to right, var(--black), var(--black)) 5.5px 6px / 11px 11px no-repeat, /* Window close button border */
+    linear-gradient(
+      to bottom,
+      transparent 21px,
+      var(--black) 21px,
+      var(--black) 23px,
+      transparent 23px
+    ), /* Title bar bottom border */
+    linear-gradient(
+      to bottom,
+      var(--white) 3px,
+      transparent 3px,
+      transparent 20px,
+      var(--white) 20px
+    ), /* Title bar vertical borders */
+    linear-gradient(
+      to right,
+      var(--white) 2px,
+      transparent 2px,
+      transparent calc(100% - 2px),
+      var(--white) calc(100% - 2px)
+    ), /* Window side borders */
+    repeating-linear-gradient(
+      to bottom,
+      var(--black) 1px,
+      var(--white) 1px,
+      var(--white) 2px,
+      var(--black) 2px,
+      var(--black) 3px
+    ), /* Dithered window content background */
+    var(--white); /* Base white background */
+  --windowShadow: 0 0 0 1px var(--black), 2px 2px 0 var(--black); /* Classic Mac window shadow */
+}
+
+/* SVG filter for dithering effect - makes images look pixelated */
+.interface-container svg {
+  position: absolute;
+}
+
+/* Window title bar styling - centered text with white background */
+.interface-container h3 {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  font-size: 13px;
+  height: 21px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 5px 0;
+  background: var(--white); /* White background to cover the window border */
 }
 
 .art-canvas {
@@ -41,7 +143,6 @@
   border: 2px solid var(--black);
   border-radius: 4px;
   box-shadow: 2px 2px 0 var(--black);
-  z-index: 100;
   font-family: "Chicago", monospace;
   transition: transform 0.3s ease-in-out;
 }
@@ -68,18 +169,37 @@
 }
 
 .welcome-button {
-  background: var(--white);
-  border: 2px solid var(--black);
-  border-radius: 4px;
-  padding: 4px 16px;
   font-family: "Chicago", monospace;
-  cursor: pointer;
-  box-shadow: 1px 1px 0 var(--black);
+  font-size: 12px;
+  line-height: 1.5;
+  width: 80px;
+  border: none;
+    box-shadow: 
+    inset 0 0 0 1px var(--black), /* Inner border */
+    0 0 0 2px var(--white),         /* Middle border */
+    0 0 0 5px var(--black);         /* Outer border */
+  border-radius: 3px;
+  cursor: var(--pointer);
+  background: radial-gradient(
+      circle at center,
+      #ccc 0.5px,
+      #fff 0.5px,
+      #fff 2px
+    )
+    0 0 / 2px 2px; /* Light dithered background for selection */
+}
+
+.welcome-button:hover {
+  background: var(--darkBg);
+  color: var(--white);
 }
 
 .welcome-button:active {
   transform: translate(1px, 1px);
-  box-shadow: none;
+  box-shadow: 
+    inset 0 0 0 1px var(--black),
+    0 0 0 1px var(--white),
+    0 0 0 3px var(--black);
 }
 
 /* Icons*/
@@ -124,6 +244,33 @@
 #bomb-icon {
   top: 160px;
   right: 20px;
+}
+
+/* Music icon specific positioning */
+#music-icon {
+  top: 280px;
+  right: 20px;
+}
+
+/* Volume icon specific positioning */
+#volume-icon {
+  top: 510px;
+  right: 20px;
+}
+
+#volume-icon .icon-label {
+  margin-top: -10px; /* Adjust this value as needed */
+}
+/* LinkedIn icon specific positioning */
+#linkedin-icon {
+  top: 420px;
+  right: 35px;
+  width: 70px;
+  height: auto;
+}
+
+#linkedin-icon .icon-label {
+  margin-top: 5px; /* Adjust this value as needed */
 }
 
 /* Date display in top right */
