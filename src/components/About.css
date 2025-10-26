@@ -1,9 +1,16 @@
-/* Top row container for Now Playing and Visualizer windows */
+/* Main container for all windows */
+#containerRef {
+  position: relative;
+  min-height: 600px;
+  padding: 10px;
+}
+
+/* Remove toprow since we're using absolute positioning */
 .toprow {
-  display: flex;
-  justify-content: space-around;
-  margin: 0 0 20px;
-  gap: 20px;
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin-bottom: 250px;
 }
 
 /* Album artwork container - square aspect ratio */
@@ -33,12 +40,14 @@
 /* Common styling for all draggable windows */
 .analyzer,
 .window,
-.nowplaying {
+.nowplaying,
+.workfuel {
   cursor: var(--default) !important; /* Use custom cursor */
   z-index: 999; /* Ensure windows appear on top */
   background: var(--windowBg); /* Apply complex window background */
   box-shadow: var(--windowShadow); /* Classic Mac window shadow */
   border-radius: 2px; /* Slight rounding for authentic look */
+  position: absolute; /* Position windows absolutely for proper dragging */
 }
 
 /* Audio visualizer window - displays frequency bars */
@@ -218,8 +227,6 @@
 
 .about-container {
   position: fixed;
-  top: 50%;
-  left: 50%;
   transform: translate(40%, -50%) scale(0.1);
   opacity: 0;
   z-index: 20;
@@ -272,6 +279,119 @@
   background: #000;
   clip-path: polygon(35% 25%, 35% 75%, 80% 50%); /* Triangle shape */
   transition: opacity 0.2s ease-in-out;
+}
+
+/* Work Fuel window - blank window */
+.workfuel {
+  width: 400px;
+  height: 300px;
+  padding: 30px 5px 10px 5px;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none; /* Disable pointer events except for drag area */
+}
+
+/* Work Fuel window content frame - holds content */
+.workfuel .frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* Work location toggle buttons */
+.work-location-toggle {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  pointer-events: all;
+}
+
+.work-location-toggle button {
+  font-family: "Chicago", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 2px 15px;
+  border: none;
+  box-shadow: inset 0 0 0 1px #333, 0 0 0 2px #fff, 0 0 0 5px #333; /* 3D button effect */
+  border-radius: 3px;
+  cursor: var(--pointer);
+}
+
+.work-location-toggle button:hover {
+  background: var(--darkBg);
+  color: #fff;
+}
+
+.work-location-toggle button.active {
+  background: var(--darkBg);
+  color: #fff;
+}
+
+/* Work fuel content container */
+.work-fuel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Coffee cup container */
+.coffee-cup-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Coffee cup ASCII art */
+.coffee-cup-ascii {
+  font-size: 3px;
+  line-height: 1;
+  pointer-events: none;
+  font-family: monospace;
+  white-space: pre;
+  color: var(--textColor);
+  margin: 0;
+}
+
+/* Matcha container */
+.matcha-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Matcha ASCII art */
+.matcha-ascii {
+  font-size: 3px;
+  line-height: 1;
+  pointer-events: none;
+  font-family: monospace;
+  white-space: pre;
+  color: var(--textColor);
+  margin: 0;
+}
+
+/* Ensure all frame children use border-box sizing */
+.workfuel .frame * {
+  box-sizing: border-box;
+}
+
+/* Draggable area - title bar for moving the window */
+.workfuel .dragarea {
+  position: absolute;
+  pointer-events: all; /* Enable dragging only on title bar */
+  z-index: 999;
+  top: 0;
+  left: 0;
+  height: 24px; /* Height of title bar */
+  width: 100%;
 }
 
 /* Main album list window - contains album artwork and track list */
@@ -392,4 +512,8 @@
   opacity: 1;
 }
 
+.window {
+  position: relative;
+  z-index: 1;
+}
 

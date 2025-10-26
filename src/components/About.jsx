@@ -22,53 +22,54 @@ const About = () => {
   const [context, setContext] = useState(null); // Web Audio API context
   const [analyser, setAnalyser] = useState(null); // Audio analyser for visualizer
   const [date, setDate] = useState(""); // Current date display
+  const [workLocation, setWorkLocation] = useState("home"); // Work location toggle: 'home' or 'office'
   const [isLoaded, setIsLoaded] = useState(false); // Component load state
   const containerRef = useRef(null); // Reference to main container for draggable bounds
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
-    "Drug Church",
-    "Blood Incantation",
-    "The Chisel",
-    "Prison Affair",
-    "Dead Finks",
-    "Cassandra Jenkins",
-    "Font",
-    "USA Nails",
-    "Sheer Mag",
-    "Dummy",
+    "Grimes",
+    "Radiohead",
+    "The Beatles",
+    "Elton John",
+    "Nirvana",
+    "The Black Keys",
+    "Clairo",
+    "Chris Stapleton",
+    "My Chemical Romance",
+    "Billie Eilish",
   ]; // Artist names for display
 
   const songPlaying = [
-    "Hey Listen",
-    "The Stargate [Tablet 1]",
-    "Cuts Like a Knife",
-    "I'm Leaving Broken",
-    "Propane Tanks",
-    "Aurora, IL",
-    "Sentence 1",
-    "Feel Worse",
-    "All Lined Up",
-    "Nullspace",
+    "Oblivion",
+    "Just",
+    "Something",
+    "Goodbye Yellow Brick Road",
+    "About A Girl",
+    "Weight Of Love",
+    "Juna",
+    "The Bottom",
+    "House Of Wolves",
+    "L'AMOUR DE MA VIE",
   ]; // Song titles for display
 
   const albumImages = [
-    "https://f4.bcbits.com/img/a2870032268_16.jpg",
-    "https://f4.bcbits.com/img/a4024825693_10.jpg",
-    "https://f4.bcbits.com/img/a2689309068_16.jpg",
-    "https://f4.bcbits.com/img/a2871861375_16.jpg",
-    "https://f4.bcbits.com/img/a3540184311_16.jpg",
-    "https://f4.bcbits.com/img/a1338331199_16.jpg",
-    "https://f4.bcbits.com/img/a0033648289_16.jpg",
-    "https://f4.bcbits.com/img/a0990023259_16.jpg",
-    "https://f4.bcbits.com/img/a4071043534_16.jpg",
-    "https://f4.bcbits.com/img/a3924570048_16.jpg",
+    "/assets/grimes.jpg",
+    "/assets/radiohead.jpg",
+    "/assets/Abbey-Road.webp",
+    "/assets/Elton-John-Goodbye-Yellow-Brick-Road-album-cover-820.webp", 
+    "/assets/Nirvana-Bleach.jpg",
+    "/assets/blackkeys.jpg",
+    "/assets/clairocharm.jpg",
+    "/assets/CHRIS-STAPLETON-HIGHER.jpg",
+    "/assets/mcr.jpg",
+    "/assets/billie.jpg",
   ]; // Album artwork URLs
 
   const trackUrls = [
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/drug-church.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/blood-incantation.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/the-chisel.mp3",
+    "/assets/audio/Goodbye-Yellow-Brick-Road.mp3",
+    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/prison-affair.mp3",
+    "/assets/audio/The-Black-Keys-Weight-of-Love.mp3",
     "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/prison-affair.mp3",
     "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/dead-finks.mp3",
     "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/cassandra-jenkins.mp3",
@@ -77,19 +78,6 @@ const About = () => {
     "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/sheer-mag.mp3",
     "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/dummy.mp3",
   ]; // Audio file URLs for playback
-
-  const albumTitles = [
-    "Prude",
-    "Absolute Elsewhere",
-    "What a Fucking Nightmare",
-    "Demo IV",
-    "Eve of Ascension",
-    "My Light, My Destroyer",
-    "Strange Burden",
-    "Feel Worse",
-    "Playing Favorites",
-    "Free Energy",
-  ]; // Album titles for display
 
   /**
    * Main useEffect - handles component initialization and cleanup
@@ -170,19 +158,22 @@ const About = () => {
         };
 
         // Initialize all draggables with proper z-index management
-        const draggableSelectors = ['.window', '.nowplaying', '.analyzer'];
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow'];
         
-        // First pass: Set initial z-index for all windows
-        draggableSelectors.forEach((selector, index) => {
-          const elements = document.querySelectorAll(selector);
-          elements.forEach(el => {
-            gsap.set(el, { zIndex: highestZ + index });
-          });
+        // First pass: Set initial z-index values only
+        // Positions are now handled by inline styles in JSX directly
+        windowIds.forEach((id, index) => {
+          const element = document.querySelector(id);
+          if (element) {
+            gsap.set(element, { 
+              zIndex: highestZ + index
+            });
+          }
         });
         
-        // Second pass: Make them draggable
-        draggableSelectors.forEach(selector => {
-          Draggable.create(selector, {
+        // Second pass: Make them draggable using the IDs
+        windowIds.forEach(id => {
+          Draggable.create(id, {
             type: 'x,y',
             bounds: 'body',
             edgeResistance: 0.65,
@@ -376,11 +367,15 @@ const About = () => {
   };
 
   return (
-    <div ref={containerRef}>
-      {/* Top row containing Now Playing and Visualizer windows */}
+    <div ref={containerRef} id="containerRef">
+      {/* Top row containing Now Playing, Visualizer and Work Fuel windows */}
       <div className="toprow">
         {/* Now Playing window - shows current track info and controls */}
-        <div className="nowplaying">
+        <div 
+          id="nowPlayingWindow" 
+          className="nowplaying" 
+          style={{ position: 'absolute', left: '700px', top: '350px' }}
+        >
           <h3>Now Playing</h3>
           {/* Play/Pause button with triangle icon */}
           <div>
@@ -411,7 +406,11 @@ const About = () => {
         </div>
 
         {/* Audio visualizer window - shows frequency bars */}
-        <div className="analyzer">
+        <div 
+          id="analyzerWindow" 
+          className="analyzer" 
+          style={{ position: 'absolute', left: '450px', top: '350px' }}
+        >
           <h3>Visualizer</h3>
           <div>
             {/* 10 frequency bars that animate based on audio data */}
@@ -427,13 +426,172 @@ const About = () => {
             <div></div>
           </div>
         </div>
+
+        {/* Work Fuel window */}
+        <div 
+          id="workFuelWindow" 
+          className="workfuel" 
+          style={{ position: 'absolute', left: '1250px', top: '350px' }}
+        >
+          <div className="dragarea"></div>
+          <h3>Work Fuel</h3>
+          <div className="frame">
+            <div className="work-fuel-content">
+              {/* Toggle button */}
+              <div className="work-location-toggle">
+                <button 
+                  className={workLocation === "home" ? "active" : ""}
+                  onClick={() => setWorkLocation("home")}
+                >
+                  Work from home
+                </button>
+                <button 
+                  className={workLocation === "office" ? "active" : ""}
+                  onClick={() => setWorkLocation("office")}
+                >
+                  In office
+                </button>
+              </div>
+              
+              {/* Work location ASCII art displays */}
+              {workLocation === "home" && (
+                <div className="matcha-container">
+                  <pre className="matcha-ascii">
+{`                          ░░▒▒▒░░░░▒▒▒▒░                          
+               ░ ░░░░░░▒░░   ░░       ░        ░▓░                
+           ▒░            ░░ ░░░░░░░░░░░░             ▓░           
+        ▒  ░              ░░ ▒▒▓███▒▒▒▒▒▒▒▒░░ ░         ▒▓        
+     ▒▒ ░░                ▒▒▒███████▒░▒▒▓█▓▓▒▒▒░░░░░       █      
+   ▒░   ░░░░░░         ▒░▒░░░░░▒░▒▓▓▒░  ░▓▒▒▓▒▓█▓▓▓░░ ░░   ░▒█    
+  ▒▒   ▒▒▒░░░░░░░  ░░░░            ░░ ░░░▒▒▓▒▒▒▒ ▓█▓▓▒▒░▒▒▒   █▒  
+ ▒▒   ░░░░░▒▒▒▓▒▒▒▒ ░░               ░░░░░▒░░▒▓▒▒█▒ ▓██▒▓▓▒▒░  █▓ 
+ ▓▒ ░░░░░░░░░▓▒░▓▒▒▓▓▒░               ░░░░░░▒░ ▒▒░▓██░▒▒▓▓▓▓▒▒░██ 
+ ▒▓ ░░        ░ ░▓▓▒▒░▒░              ░░ ░░░▒▒░░▒░▒▒▓▓ ▒▒░▓▒▒▒ █  
+ ▓▓▓            ░▒▒▒░▒░ ░ ░░░ ░░░      ░░░░░░░▒▒▒▓░▓▓▓██▒▒ ░▓▒█ ▓ 
+ ░▒▓▓▓░       ░░▒▒▒ ░░ ░░░░░░░  ░░░ ▒▒░░░░░░░░░░▒▒▒▓▓▓█████▓▓░ ▒  
+ ░░ ▒▓▓█ ░ ░░░░░▒▒░░░  ░▒▒▒▒▒▒▒░░░░░ ▒░    ░░░▒░░░░░░▒▒▒▒▒▓█ ░░   
+ ░▒▒   ░░░░▓░░░▒▒▓░   ░░░▒▒▒▒▒░░░  ░░░▒  ▒    ░▓░░ ░░░░█    ░     
+  ▒▒▒▒▒    ░░ ░▓▒░░░░░░▒▒▒▒▒▒▒▒░░░░ ░░▒▒ ▒  ░ ░░▒▒█░░  ░ ░        
+  ▒▒▒▒▒▒░░   ░░░░░   ░░ ░▒██░ ░▒░░ ░  ░ ░ ░██▒▒░   ░░░ ░          
+  ░▒▒▓▓▓▒▒▒░░            ░░   ▒▓░░░░░░░░░░▒▒▒▓▒░░░░         ░░    
+  ░▒▒▒▓▓▓▓▓▓▒▒▒░░░ ░    ░░░      ░▓▒▒▒░▒▒▒░░░   ░░        ░░      
+  ░░▒▒▒▒▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░░░ ░  ▒░▒▒▒▒▒▒░▒░░░ ░    ░░░░░░         
+   ░░▒▓▒▓▓▓▓▓█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░         
+   ░░▒▒▒▒▓▓▓▓▓█▓▓▓██████████████████▓▓▓▓▓▒▒▒▒▒▒░▒░░░░░░░░░        
+   ░░░▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓██▓▓▓██████▓█▓█▓▓▓▒▒▒▒▒░░░░░░░░░░░░         
+   ░░░▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███████▓▓▓▓▓▓▒▒▒▒▒▒░░░░░░░░░░░░          
+   ░░▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒░░░░░░░░░░░░           
+    ░▒▒▒▒▒▒▓▓▓▓▓▓▓▒▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒░░░░░░░░░░░░            
+    ▒▒▒▒▒▒▒▒▓▒▓▓▒▒▒▓▒▒▒▓▓▓▒▓▒▒▒▒▒▓▒▓▒▒▒▒▒▒░░░░░░░░░░░             
+    ▒▒▒▒▒▒▒▒▓▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░                    
+    ░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░                    
+     ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░                     
+     ▒░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░                 ░    
+     ▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░                     
+     ░▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░                ░     
+      ▒▒▓▓▒▓▓▓▒▒▒▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░                ░░     
+      ▒▒▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░       ░ ░░  ░░     
+      ▒▒▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░░░░    ░░░░░░░ ░░░     
+      ▒▓▓▓▓▓▓█▓▓▓██▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░ ░░░░░░░░ ░░      
+       ▓▓████████████▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░▒▒      
+       █▒▓█████████████▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒░░▒      
+       █▒▓█████████████████▓▓▓▓▒▓▒▓▒▒▒▒▒▒▒▒▒▒▒▒░░░▒▒▒▒▒▒░▒▒░      
+       ▒▓▓███████████████████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒░▒▒▒▒▒▒▒░▒▒░      
+       ░▓▓▓█████████████████████████▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▒▒▒▒▒░▒░       
+        ▓▒▓██████████████████████████████▓▓▓▓▓▓▒▒▒▓▓▒▒▒▒▒▒        
+        ▓▒▓▓██████████████████████████████████▓▒▒▒▓▓▒▒▒▒▒▒░       
+        █▓▓▓██████████████████████████████████▓▒▒▒▓▓▓▒▒▒▒░░       
+        ▒▓▒███████████████████████████████████▓▒▒▓▓▒▓▒▒▒▒░        
+        ░▒▒███████████████████████████████████▓▒▒▒▒▒▒▒▒░▒▒        
+        ░ ▓▒██████████████████████████████████▓▒▒▓▓▓▓▒░▒░░        
+            ▓█████████████████████████████████▓▒▒▓▓▒▓▒░░░         
+         █ ▒░▓█████████████████████████████▓▓▓▒▒▒▓▓▓▓▒▒▒          
+          ▓█▒▓▒██▒▓██████████████████████████▓▒▒▓▓▓▒▒▒▒▒          
+           ▒░█▒▒░▓▒██████████████████████████▒▒▒▓░▒▒▒▒░░          
+            ▒░▒█░▒░▓▓▓▓██▓██▓▓▓▒▒████▓▒▒▓▒▓▓▒▒▓▒▓▒▒▓▒░            
+              ▓▒▒█████▓▒▒▒▒▒▒▒▓░░▓▓▓▓▓▓▓████░░░▒▓▒▒░              
+                ░ ░░▒▒▒████████░▒█▓▓▓▓▓█████▓▒▒▓▒░                
+                   ▒██▒░▒▒▒▒▒▒▒░▒▒▒▓▓▒▓▓██▓▒█▒▒                   
+                           ░▓██▒░▓██▒                             `}
+                  </pre>
+                </div>
+              )}
+              {workLocation === "office" && (
+                <div className="coffee-cup-container">
+                  <pre className="coffee-cup-ascii">
+{`                                                                   
+           █████████████████████████████████████████████           
+      ████████████ ▒░ ░▒▒▒▓▓▓▓▓▓█████████████████████████████      
+      ██▓░  ████████████████████▓   ▒▒    ░▒▒▒▒▒▓▓▓██▓█   ▒▒█      
+      █████▓░  ░█▓    ░▓███████████████████▒ ░      ▒████████      
+      █████████▓▓▓██████████████████▓█████████████████████████     
+   █████████████▓████▓██████████████████████████████████████▓███▓  
+ ████▓▒▒▓██████▓██████▓█████████████████████████████████████▒▒████ 
+ ████▓███▒░░░░░ ░▒▓██████████████████████████████████████████▓░  █░
+ ██░░▒██████████████▓███████████████████████████████████▓    ▒████ 
+ █████▓       ▒▓▓████▓▓▒▓▓▓█████████████▓▒▒░            ░█████████ 
+ ██████████████▓▓▓████████████████████████████████████████████████ 
+  █████████▓▓█▓▓▓▓▓▓▓████████████████████████████████████████████  
+      ████████████▓█▓████████████████████████████████████████      
+             █████████████████████████████████████████             
+                                                      ░▓▓██▒░      
+                                                 ░░░▒▒▒▒▒▒▒▒       
+                              ░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒░░░▒▒▒▒       
+                               ░ ░░░░░░░░▒▒▒▒▒░░░░░░░░▒▒▒▒▒░       
+                                ░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒         
+       █                         ░░░░ ░░░░░░░░░░▒▒▒▒▒░▒▒▒  █       
+        ▓▓                          ░░░░░░░░░░░░▒░░░░░   ▓█        
+        ░████                         ░ ░ ░           ▒████        
+         ▒▒░▒██████                             ▒██████████        
+         ▒▒░▓░░░▒▒▓██████████████████████████████▓█▒▓▓▒▓▓█▒        
+         ░▒▒▒▒░▒░░░▒░▒ ▒▒▒▒░▓▒▒█▒▒▒▒▒▒▒▓░▒▓▒▒▒▒▒▓▓▓▓▓▓▒█▓█         
+          ▒▒░▒░▒▒▒▓▒░▒▒▒▒▒▒▒▓▒▒▒▓▓█▒▓▓▒▓█▓▒▓▓▓▓█▒▓▓▒▓▓▓███         
+          ▒▒▒░▒▒▒▒░▒▒▓░▒▒▓░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▓▒▓▓▒▓█▒██▓         
+          ▒░░▒▒░░▒▒▒▒▒░▒▒▒▒▓▒▓ ▒▒▓▒▒▒▒▓▒▒▒▓▓▒▒▓▓█▓▓█▓▓▓██          
+          ░▓░▒▒░▒▒░▒░░▒▓░▒░░░▓▓▓▒▒▓▒▒▓▓▒▓▒▒▒█▓▓▒▒▒▓▓▓█▓██          
+           ▒▒▒░▒▒▒░░▒▒▒▒░▒░▓▒▒░▓▒▓▓▒▓░▓▒▓▒▓▒▒░▓▓▓▓▓▓▓▓▓██          
+           ▒▒░▒░▒░▒▒▒▒▒░▒▒ ▒░▒▒░▓ ▓░▒▓▒▒▒▓▓▒▓▓█▓▒▓▓▓▓▓██░          
+           ▒▒▒▒▒ ▒▒▒▒░░░▒▒▒▒▓▒█▒▓░▓▒▓▒▒▒▓▒▒▓▒▓▓▒▒▓▓▓█▓▓█           
+            ▒▒░▒▒░▒░▒▒▒▒▒░▒░▒▒░▒▓░▒▓▒▓▓▒▒▓▓▓▒▒▒▓█▓▓█▓▓██           
+            ▒▒▒▒░░░░░░▒░▓▒░▒▒░▒▒▓▓░▒░▒░▓▒▒▒▓███▒█▓▓▓▓██▓           
+            ▒▒░░░▒▒▒▒░▒▒▒▒░░▒▒▒▓░▒▒█▒█▒▒█▒▓▒▒▒▒▓▓▒▓▓▓██            
+             ▓▒▒░▒░▒▒░▒░░░▒▓▓▒▒▒▓▓▒▒▒█▓▒▒▒▓▓▓▓▓▓▓▓▓▓█▓█            
+             ▓░▒░▒░▒░░░▒▒▒░▒░▒▒▒░▒▒▒▒▒░▓▒▒▓▒▓▓▓▓▒▓▓▓▓██            
+             ▒▒▒▒▒░░▒▒▒▒░░▒░▒▒▒▒▒▒▓▒▓▒▒▒▒▓▓▓▓▒▓▓▓▓▓▓██             
+             ░▒░▒░▒▒▒▒▒ ▒▓▒▓▒▒▒▓▓▒▒▒▒▒▓▒▓▓▒▓▓▓▓▓▓▓▓▓██             
+              ▒▒░░░░░▒▒░▒░░▒▒▓▒▒▒▒▒▒▒▓▒▒▒▒▓▓▓▓▓▒▓▓▓▓██             
+              ▓▒▒▒░░▒▒▒░▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒█▒▓▓░▒▒▒▓▓▓▓▓█▓             
+              ▒▒▒▒░░▒░░▒▒▒▒▒▒▒▓░▒▓▒▒▒▓▒▓▒▓▒▓▓▓▓▓▒▓█▓█              
+              ░▒▒░▒░▒▒▒▒▒▒▒▒░▒▒▒▒▒▒▓▒▒▓▓▒▒▓▒▓▓▓▓▓▓▓██              
+               █▒░░░ ░ ▒▒▒░▒▒▓▒▒▓▓▒▒▒▒▒▒▒▓▓▓▓▓▒▓▓▓██               
+                ███▒▒░░▒▒░▒▒░░▓▒▒▒▒▒▒▓▓▓▓▒▒▓▒▒▓▓▓██░               
+                  ▒██▓▒▒░▒░▒▒▒▒ ▓░▓▒▒▒▓▒▒▓▒▓▓████ ░▒               
+                      ▓██████████▒███████████░   ░▓                
+                               ▒███▓▒         ░▒▒▒▓                
+                                        ░░░░░▒▒▒▒▓▒ ░              
+                                    ░░░░░░▒░░▒▒▒▒▒▒░               
+                ░                 ░░░░░░░░▒░▒░▒▒▓▓▓                
+                 ░                 ░░░░░░░░▒▒▒▒▓█ ░                
+                 ░░▒              ░░░░░░░░░▒▒██░                   
+                    ░▒▓                ░▒▒▓█▒                      
+                                                                   `}
+                  </pre>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main album list window */}
-      <div className="window">
+      <div 
+        id="playlistWindow" 
+        className="window"
+        style={{ position: 'absolute', left: '450px', top: '550px' }}
+      >
         {/* Draggable title bar */}
         <div className="dragarea"></div>
-        <h3>Top 10 Albums - 2024</h3>
+        <h3>Work Playlist</h3>
         <div className="frame">
           {/* Album artwork carousel */}
           <div className="imgwrap">
@@ -459,7 +617,7 @@ const About = () => {
                       handleTrackClick(index);
                     }}
                   >
-                    {artist} - <span>{albumTitles[index]}</span>
+                    {artist} - <span>{songPlaying[index]}</span>
                   </a>
                 </li>
               ))}
