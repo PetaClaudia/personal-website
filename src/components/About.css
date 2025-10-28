@@ -41,8 +41,9 @@
 .analyzer,
 .window,
 .nowplaying,
+.dogframe,
 .workfuel {
-  cursor: var(--default) !important; /* Use custom cursor */
+  cursor: var(--pointer) !important; /* Use custom cursor */
   z-index: 999; /* Ensure windows appear on top */
   background: var(--windowBg); /* Apply complex window background */
   box-shadow: var(--windowShadow); /* Classic Mac window shadow */
@@ -133,7 +134,7 @@
 
 /* Now Playing window - displays current track info and controls */
 .nowplaying {
-  width: 250px;
+  width: 300px;
   height: 150px;
   padding: 30px 5px 10px 15px; /* Space for title bar */
   box-sizing: border-box;
@@ -281,10 +282,51 @@
   transition: opacity 0.2s ease-in-out;
 }
 
+/* Dog picture window - blank window */
+.dogframe {
+  width: 300px;
+  height: 325px;
+  padding: 30px 5px 10px 5px;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none; /* Disable pointer events except for drag area */
+}
+
+/* Dog image container - similar to album artwork */
+.dog-image-container {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
+  pointer-events: all;
+}
+
+/* Dog image styling - dithered and pixelated effect */
+.dog-image-container img {
+  box-shadow: 0 0 0 1px; /* Black border around image */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  filter: saturate(0) brightness(1) url(#dither); /* Convert to grayscale, brighten, and apply dithering */
+}
+
+/* Draggable area - title bar for moving the window */
+.dogframe .dragarea {
+  position: absolute;
+  pointer-events: all; /* Enable dragging only on title bar */
+  z-index: 999;
+  top: 0;
+  left: 0;
+  height: 24px; /* Height of title bar */
+  width: 100%;
+}
+
 /* Work Fuel window - blank window */
 .workfuel {
-  width: 400px;
-  height: 300px;
+  width: 280px;
+  height: 260px;
   padding: 30px 5px 10px 5px;
   box-sizing: border-box;
   overflow: hidden;

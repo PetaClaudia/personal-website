@@ -11,7 +11,7 @@ gsap.registerPlugin(Draggable);
  * About Component - Retro Macintosh Music Player Interface
  *
  * This component creates a nostalgic recreation of a classic Macintosh music player
- * with draggable windows, audio playback, and visualizer functionality.
+ * with draggable windows, audio playback, and visualiser functionality.
  */
 const About = () => {
   // State management for audio playback and UI
@@ -20,20 +20,18 @@ const About = () => {
   const [activeSource, setActiveSource] = useState(null); // Web Audio API source node
   const [buffers, setBuffers] = useState({}); // Audio buffers for all tracks
   const [context, setContext] = useState(null); // Web Audio API context
-  const [analyser, setAnalyser] = useState(null); // Audio analyser for visualizer
-  const [date, setDate] = useState(""); // Current date display
+  const [analyser, setAnalyser] = useState(null); // Audio analyser for visualiser
   const [workLocation, setWorkLocation] = useState("home"); // Work location toggle: 'home' or 'office'
-  const [isLoaded, setIsLoaded] = useState(false); // Component load state
   const containerRef = useRef(null); // Reference to main container for draggable bounds
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
+    "The Black Keys",
     "Grimes",
     "Radiohead",
     "The Beatles",
     "Elton John",
     "Nirvana",
-    "The Black Keys",
     "Clairo",
     "Chris Stapleton",
     "My Chemical Romance",
@@ -41,25 +39,25 @@ const About = () => {
   ]; // Artist names for display
 
   const songPlaying = [
+    "Weight Of Love",
     "Oblivion",
     "Just",
-    "Something",
+    "While My Guitar Gently Weeps",
     "Goodbye Yellow Brick Road",
     "About A Girl",
-    "Weight Of Love",
-    "Juna",
+    "Nomad",
     "The Bottom",
     "House Of Wolves",
     "L'AMOUR DE MA VIE",
   ]; // Song titles for display
 
   const albumImages = [
+    "/assets/blackkeys.jpg",
     "/assets/grimes.jpg",
     "/assets/radiohead.jpg",
     "/assets/Abbey-Road.webp",
-    "/assets/Elton-John-Goodbye-Yellow-Brick-Road-album-cover-820.webp", 
+    "/assets/Elton-John-Goodbye-Yellow-Brick-Road-album-cover-820.webp",
     "/assets/Nirvana-Bleach.jpg",
-    "/assets/blackkeys.jpg",
     "/assets/clairocharm.jpg",
     "/assets/CHRIS-STAPLETON-HIGHER.jpg",
     "/assets/mcr.jpg",
@@ -67,35 +65,25 @@ const About = () => {
   ]; // Album artwork URLs
 
   const trackUrls = [
-    "/assets/audio/Goodbye-Yellow-Brick-Road.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/prison-affair.mp3",
     "/assets/audio/The-Black-Keys-Weight-of-Love.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/prison-affair.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/dead-finks.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/cassandra-jenkins.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/font.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/usa-nails.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/sheer-mag.mp3",
-    "https://raw.githubusercontent.com/adamjkuhn/audiofiles/master/dummy.mp3",
+    "/assets/audio/Grimes-Oblivion.mp3",
+    "/assets/audio/Radiohead-Just.mp3",
+    "/assets/audio/wmggw.mp3",
+    "/assets/audio/Goodbye-Yellow-Brick-Road.mp3",
+    "/assets/audio/AboutAGirl.mp3",
+    "/assets/audio/Clairo-Nomad.mp3",
+    "/assets/audio/ChrisStapleton-TheBottom.mp3",
+    "/assets/audio/MCR-HouseofWolves.mp3",
+    "/assets/audio/BillieEilish-LAMOURDEMAVIE.mp3",
   ]; // Audio file URLs for playback
 
   /**
    * Main useEffect - handles component initialization and cleanup
-   * Sets up date display, audio context, visualizer, keyboard controls, and draggable functionality
+   * Sets up date display, audio context, visualiser, keyboard controls, and draggable functionality
    */
   useEffect(() => {
-    // Set up current date display in Mac-style format
-    const dt = new Date();
-    const dateString =
-      dt.toLocaleString("en-us", { weekday: "short" }) +
-      " " +
-      dt.toLocaleString("default", { month: "short" }) +
-      " " +
-      dt.getDate();
-    setDate(dateString);
-
     /**
-     * Visualizer animation loop
+     * Visualiser animation loop
      * Continuously reads audio frequency data and updates CSS custom properties for bar heights
      */
     const draw = () => {
@@ -105,7 +93,7 @@ const About = () => {
         const dataArray = new Uint8Array(bufferLength);
         analyser.getByteFrequencyData(dataArray); // Get frequency data
 
-        // Update CSS custom properties for each visualizer bar
+        // Update CSS custom properties for each visualiser bar
         for (let i = 0; i < 11; i++) {
           document.body.style.setProperty(
             "--top" + i,
@@ -150,7 +138,7 @@ const About = () => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
             if (z > currentHighest) currentHighest = z;
           });
-          
+
           // Set the new z-index to be higher than the current highest
           const newZ = Math.max(highestZ, currentHighest) + 1;
           highestZ = newZ;
@@ -158,29 +146,29 @@ const About = () => {
         };
 
         // Initialize all draggables with proper z-index management
-        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow'];
-        
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame'];
+
         // First pass: Set initial z-index values only
         // Positions are now handled by inline styles in JSX directly
         windowIds.forEach((id, index) => {
           const element = document.querySelector(id);
           if (element) {
-            gsap.set(element, { 
+            gsap.set(element, {
               zIndex: highestZ + index
             });
           }
         });
-        
+
         // Second pass: Make them draggable using the IDs
         windowIds.forEach(id => {
           Draggable.create(id, {
             type: 'x,y',
             bounds: 'body',
             edgeResistance: 0.65,
-            onPress: function() {
+            onPress: function () {
               bringToFront(this.target);
             },
-            onDragStart: function() {
+            onDragStart: function () {
               bringToFront(this.target);
             }
           });
@@ -193,7 +181,6 @@ const About = () => {
     // Delay setup to ensure DOM is ready
     setTimeout(() => {
       setupDraggable();
-      setIsLoaded(true);
     }, 100);
 
     // Cleanup function
@@ -276,7 +263,7 @@ const About = () => {
     stopActiveSource(); // Stop any currently playing track
     try {
       const source = context.createBufferSource();
-      source.connect(analyser); // Connect to analyser for visualizer
+      source.connect(analyser); // Connect to analyser for visualiser
       setActiveSource(source);
 
       // Auto-advance to next track when current track ends
@@ -368,13 +355,13 @@ const About = () => {
 
   return (
     <div ref={containerRef} id="containerRef">
-      {/* Top row containing Now Playing, Visualizer and Work Fuel windows */}
+      {/* Top row containing Now Playing, Visualiser and Work Fuel windows */}
       <div className="toprow">
         {/* Now Playing window - shows current track info and controls */}
-        <div 
-          id="nowPlayingWindow" 
-          className="nowplaying" 
-          style={{ position: 'absolute', left: '700px', top: '350px' }}
+        <div
+          id="nowPlayingWindow"
+          className="nowplaying"
+          style={{ position: 'absolute', left: '740px', top: '350px' }}
         >
           <h3>Now Playing</h3>
           {/* Play/Pause button with triangle icon */}
@@ -405,13 +392,13 @@ const About = () => {
           </div>
         </div>
 
-        {/* Audio visualizer window - shows frequency bars */}
-        <div 
-          id="analyzerWindow" 
-          className="analyzer" 
-          style={{ position: 'absolute', left: '450px', top: '350px' }}
+        {/* Audio visualiser window - shows frequency bars */}
+        <div
+          id="analyzerWindow"
+          className="analyzer"
+          style={{ position: 'absolute', left: '490px', top: '350px' }}
         >
-          <h3>Visualizer</h3>
+          <h3>Visualiser</h3>
           <div>
             {/* 10 frequency bars that animate based on audio data */}
             <div></div>
@@ -428,10 +415,10 @@ const About = () => {
         </div>
 
         {/* Work Fuel window */}
-        <div 
-          id="workFuelWindow" 
-          className="workfuel" 
-          style={{ position: 'absolute', left: '1250px', top: '350px' }}
+        <div
+          id="workFuelWindow"
+          className="workfuel"
+          style={{ position: 'absolute', left: '1250px', top: '320px' }}
         >
           <div className="dragarea"></div>
           <h3>Work Fuel</h3>
@@ -439,25 +426,25 @@ const About = () => {
             <div className="work-fuel-content">
               {/* Toggle button */}
               <div className="work-location-toggle">
-                <button 
+                <button
                   className={workLocation === "home" ? "active" : ""}
                   onClick={() => setWorkLocation("home")}
                 >
                   Work from home
                 </button>
-                <button 
+                <button
                   className={workLocation === "office" ? "active" : ""}
                   onClick={() => setWorkLocation("office")}
                 >
                   In office
                 </button>
               </div>
-              
+
               {/* Work location ASCII art displays */}
               {workLocation === "home" && (
                 <div className="matcha-container">
                   <pre className="matcha-ascii">
-{`                          ░░▒▒▒░░░░▒▒▒▒░                          
+                    {`                          ░░▒▒▒░░░░▒▒▒▒░                          
                ░ ░░░░░░▒░░   ░░       ░        ░▓░                
            ▒░            ░░ ░░░░░░░░░░░░             ▓░           
         ▒  ░              ░░ ▒▒▓███▒▒▒▒▒▒▒▒░░ ░         ▒▓        
@@ -519,7 +506,7 @@ const About = () => {
               {workLocation === "office" && (
                 <div className="coffee-cup-container">
                   <pre className="coffee-cup-ascii">
-{`                                                                   
+                    {`                                                                   
            █████████████████████████████████████████████           
       ████████████ ▒░ ░▒▒▒▓▓▓▓▓▓█████████████████████████████      
       ██▓░  ████████████████████▓   ▒▒    ░▒▒▒▒▒▓▓▓██▓█   ▒▒█      
@@ -582,10 +569,18 @@ const About = () => {
           </div>
         </div>
       </div>
-
+      <div id="dogFrame"
+        className="dogframe"
+        style={{ position: 'absolute', left: '1250px', top: '640px' }}>
+        <div className="dragarea"></div>
+        <h3>Merlin</h3>
+        <div className="dog-image-container">
+          <img src="/assets/Merlin1.jpg" alt="Border Collie named Merlin" />
+        </div>
+      </div>
       {/* Main album list window */}
-      <div 
-        id="playlistWindow" 
+      <div
+        id="playlistWindow"
         className="window"
         style={{ position: 'absolute', left: '450px', top: '550px' }}
       >
