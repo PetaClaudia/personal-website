@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import "../App.css";
 import "./About.css";
-import About from './About';
+import "./Work.css";
+import Windows from './Windows';
 
 const Home = () => {
   const containerRef = useRef(null);
@@ -9,9 +10,14 @@ const Home = () => {
   const [date, setDate] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const [showAbout, setShowAbout] = useState(false);
+  const [showSkills, setShowSkills] = useState(false);
+  const [showContact, setShowContact] = useState(false);
+  const [showWork, setShowWork] = useState(false);
+  const [hasOpenedWindows, setHasOpenedWindows] = useState(false);
   const [zIndices, setZIndices] = useState({
     welcome: 1,
     about: 0,
+    work: 0,
     // Add more windows here as needed
   });
 
@@ -32,9 +38,25 @@ const Home = () => {
       setShowAbout(prev => !prev);
       if (!showAbout) {
         bringToFront('about');
+        setHasOpenedWindows(true);
+      }
+    } else if (windowName === 'work') {
+      setShowWork(prev => !prev);
+      if (!showWork) {
+        bringToFront('work');
+        setHasOpenedWindows(true);
       }
     }
-    // Add more window toggles here as needed
+  };
+
+  // Clear screen and reset windows component
+  const clearScreen = () => {
+    setShowAbout(false);
+    setShowSkills(false);
+    setShowContact(false);
+    setShowWork(false);
+    setShowWelcome(false);
+    setHasOpenedWindows(false); // Unmount Windows component to reset drag state
   };
 
   // Set up current date and time display
@@ -70,16 +92,25 @@ const Home = () => {
       <div id="date">{date}</div>
 
       {/* Mac icon  Top Right*/}
-      <div id="mac-icon" className="icon">
+      <button
+        id="mac-icon"
+        className="icon"
+        onClick={() => toggleWindow('work')}
+        aria-label={showWork ? 'Hide work history' : 'Show work history'}
+      >
         <img src="/assets/Mac.svg" alt="Mac Icon" />
-        <div className="icon-label">Projects</div>
-      </div>
+        <div className="icon-label">Work</div>
+      </button>
 
       {/* Trash icon */}
-      <div id="trash-icon" className="icon">
+      <button
+        id="trash-icon"
+        className="icon"
+        onClick={() => clearScreen()}>
+
         <img src="/assets/Trash.svg" alt="Trash" />
         <div className="icon-label">Clear</div>
-      </div>
+      </button>
 
       {/* Bomb icon */}
       <div id="bomb-icon" className="icon">
@@ -92,21 +123,14 @@ const Home = () => {
         id="music-icon"
         className="icon"
         onClick={() => toggleWindow('about')}
-        style={{ cursor: 'pointer' }}
-        aria-label={showAbout ? 'Hide music player' : 'Show what I\'m listening to'}
+        aria-label={showAbout ? 'Hide Desk inventory' : 'Show what\'s on my desk'}
       >
         <img src="/assets/Music.svg" alt="" aria-hidden="true" />
         <div className="icon-label">At my desk</div>
       </button>
 
-      {/* About component - always in DOM but conditionally shown */}
-      <div
-        className={`about-container ${showAbout ? 'active' : ''}`}
-        style={{ zIndex: zIndices.about }}
-        onClick={() => bringToFront('about')}
-      >
-        <About />
-      </div>
+      {/* Windows component - mounted once opened, unmounted only on Clear */}
+      {hasOpenedWindows && <Windows showAbout={showAbout} showWork={showWork} />}
 
       {/* LinkedIn icon */}
       <a
@@ -129,7 +153,7 @@ const Home = () => {
 
       {/* Welcome Panel */}
       {showWelcome && (
-        <div 
+        <div
           className="welcome-panel"
           style={{ zIndex: zIndices.welcome }}
           onClick={() => bringToFront('welcome')}

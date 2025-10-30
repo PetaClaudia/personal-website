@@ -1,19 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import "./About.css";
 import "../App.css";
+import "./Work.css";
 
 // Register the Draggable plugin for GSAP
 gsap.registerPlugin(Draggable);
 
 /**
- * About Component - Retro Macintosh Music Player Interface
+ * Windows Component - Retro Macintosh Music Player Interface
  *
  * This component creates a nostalgic recreation of a classic Macintosh music player
  * with draggable windows, audio playback, and visualiser functionality.
+ * 
+ * @param {boolean} showAbout - Whether to display the 'about' windows
+ * @param {boolean} showWork - Whether to display the 'work' windows
  */
-const About = () => {
+const Windows = ({ showAbout = false, showWork = false }) => {
   // State management for audio playback and UI
   const [currentSong, setCurrentSong] = useState(0); // Currently selected track index
   const [isPlaying, setIsPlaying] = useState(false); // Play/pause state
@@ -22,7 +26,31 @@ const About = () => {
   const [context, setContext] = useState(null); // Web Audio API context
   const [analyser, setAnalyser] = useState(null); // Audio analyser for visualiser
   const [workLocation, setWorkLocation] = useState("home"); // Work location toggle: 'home' or 'office'
-  const containerRef = useRef(null); // Reference to main container for draggable bounds
+  const [hearts, setHearts] = useState([]); // Array of floating hearts with positions
+  const [zIndexAbout, setZIndexAbout] = useState(1000); // Z-index for about windows
+  const [zIndexWork, setZIndexWork] = useState(999); // Z-index for work window
+  const prevShowAbout = useRef(showAbout);
+  const prevShowWork = useRef(showWork);
+  const maxZIndex = useRef(1000);
+
+  // Update z-index when windows are opened (transition from false to true)
+  useEffect(() => {
+    // Check if About was just opened (false -> true)
+    if (showAbout && !prevShowAbout.current) {
+      maxZIndex.current += 1;
+      setZIndexAbout(maxZIndex.current);
+    }
+    prevShowAbout.current = showAbout;
+  }, [showAbout]);
+
+  useEffect(() => {
+    // Check if Work was just opened (false -> true)
+    if (showWork && !prevShowWork.current) {
+      maxZIndex.current += 1;
+      setZIndexWork(maxZIndex.current);
+    }
+    prevShowWork.current = showWork;
+  }, [showWork]);
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
@@ -132,7 +160,7 @@ const About = () => {
         // Function to bring a window to the front
         const bringToFront = (element) => {
           // Find the current highest z-index among all windows
-          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer');
+          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window');
           let currentHighest = 0;
           allWindows.forEach(win => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
@@ -146,7 +174,7 @@ const About = () => {
         };
 
         // Initialize all draggables with proper z-index management
-        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame'];
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow'];
 
         // First pass: Set initial z-index values only
         // Positions are now handled by inline styles in JSX directly
@@ -353,15 +381,39 @@ const About = () => {
     }
   };
 
+  /**
+   * Handle click on Merlin picture - create floating heart
+   */
+  const handleMerlinClick = (e) => {
+    // Get click position relative to the dog frame
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Create new heart with unique ID and position
+    const newHeart = {
+      id: Date.now() + Math.random(),
+      x: x,
+      y: y
+    };
+
+    setHearts(prevHearts => [...prevHearts, newHeart]);
+
+    // Remove heart after animation completes (2 seconds)
+    setTimeout(() => {
+      setHearts(prevHearts => prevHearts.filter(heart => heart.id !== newHeart.id));
+    }, 2000);
+  };
+
   return (
-    <div ref={containerRef} id="containerRef">
-      {/* Top row containing Now Playing, Visualiser and Work Fuel windows */}
-      <div className="toprow">
+    <div style={{ position: 'static', width: '100%', height: '100%' }}>
+      {/* About windows container - Now Playing, Visualiser and Work Fuel windows */}
+      <div className="aboutWindows" style={{ display: showAbout ? 'block' : 'none' }}>
         {/* Now Playing window - shows current track info and controls */}
         <div
           id="nowPlayingWindow"
           className="nowplaying"
-          style={{ position: 'absolute', left: '740px', top: '350px' }}
+          style={{ zIndex: zIndexAbout }}
         >
           <h3>Now Playing</h3>
           {/* Play/Pause button with triangle icon */}
@@ -396,7 +448,7 @@ const About = () => {
         <div
           id="analyzerWindow"
           className="analyzer"
-          style={{ position: 'absolute', left: '490px', top: '350px' }}
+          style={{ zIndex: zIndexAbout }}
         >
           <h3>Visualiser</h3>
           <div>
@@ -418,7 +470,7 @@ const About = () => {
         <div
           id="workFuelWindow"
           className="workfuel"
-          style={{ position: 'absolute', left: '1250px', top: '320px' }}
+          style={{ zIndex: zIndexAbout }}
         >
           <div className="dragarea"></div>
           <h3>Work Fuel</h3>
@@ -568,22 +620,36 @@ const About = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div id="dogFrame"
+        {/* Merlin dog frame window */}
+        <div id="dogFrame"
         className="dogframe"
-        style={{ position: 'absolute', left: '1250px', top: '640px' }}>
+        style={{ zIndex: zIndexAbout }}>
         <div className="dragarea"></div>
         <h3>Merlin</h3>
-        <div className="dog-image-container">
+        <div className="dog-image-container" onClick={handleMerlinClick}>
           <img src="/assets/Merlin1.jpg" alt="Border Collie named Merlin" />
+          {/* Floating hearts */}
+          {hearts.map(heart => (
+            <img
+              key={heart.id}
+              src="/assets/pixel-heart.gif"
+              alt="heart"
+              className="floating-heart"
+              style={{
+                left: `${heart.x}px`,
+                top: `${heart.y}px`
+              }}
+            />
+          ))}
         </div>
       </div>
+      {/* End of dogFrame */}
       {/* Main album list window */}
       <div
         id="playlistWindow"
-        className="window"
-        style={{ position: 'absolute', left: '450px', top: '550px' }}
-      >
+          className="window"
+          style={{ zIndex: zIndexAbout }}
+        >
         {/* Draggable title bar */}
         <div className="dragarea"></div>
         <h3>Work Playlist</h3>
@@ -618,6 +684,37 @@ const About = () => {
               ))}
             </ul>
           </div>
+        </div>
+      </div>
+      {/* End of playlistWindow */}
+      </div>
+      {/* End of aboutWindows container */}
+
+      {/* Work History Window */}
+      <div
+        id="workHistoryWindow"
+        className="work-window"
+        style={{ display: showWork ? 'block' : 'none', zIndex: zIndexWork }}
+      >
+        {/* Draggable title bar */}
+        <div className="dragarea"></div>
+        <h3>Work History</h3>
+        <div className="work-content">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod 
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <p>
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+            eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt 
+            in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+          <p>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
+            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
+            veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+          </p>
         </div>
       </div>
 
@@ -656,4 +753,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Windows;
