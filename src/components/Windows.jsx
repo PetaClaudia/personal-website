@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import "./About.css";
 import "../App.css";
-import "./Work.css";
+import "./History.css";
 
 // Register the Draggable plugin for GSAP
 gsap.registerPlugin(Draggable);
@@ -15,9 +15,9 @@ gsap.registerPlugin(Draggable);
  * with draggable windows, audio playback, and visualiser functionality.
  * 
  * @param {boolean} showAbout - Whether to display the 'about' windows
- * @param {boolean} showWork - Whether to display the 'work' windows
+ * @param {boolean} showHistory - Whether to display the 'history' windows (work and education)
  */
-const Windows = ({ showAbout = false, showWork = false }) => {
+const Windows = ({ showAbout = false, showHistory = false }) => {
   // State management for audio playback and UI
   const [currentSong, setCurrentSong] = useState(0); // Currently selected track index
   const [isPlaying, setIsPlaying] = useState(false); // Play/pause state
@@ -28,9 +28,9 @@ const Windows = ({ showAbout = false, showWork = false }) => {
   const [workLocation, setWorkLocation] = useState("home"); // Work location toggle: 'home' or 'office'
   const [hearts, setHearts] = useState([]); // Array of floating hearts with positions
   const [zIndexAbout, setZIndexAbout] = useState(1000); // Z-index for about windows
-  const [zIndexWork, setZIndexWork] = useState(999); // Z-index for work window
+  const [zIndexHistory, setZIndexHistory] = useState(999); // Z-index for history windows
   const prevShowAbout = useRef(showAbout);
-  const prevShowWork = useRef(showWork);
+  const prevShowHistory = useRef(showHistory);
   const maxZIndex = useRef(1000);
 
   // Update z-index when windows are opened (transition from false to true)
@@ -44,13 +44,13 @@ const Windows = ({ showAbout = false, showWork = false }) => {
   }, [showAbout]);
 
   useEffect(() => {
-    // Check if Work was just opened (false -> true)
-    if (showWork && !prevShowWork.current) {
+    // Check if History was just opened (false -> true)
+    if (showHistory && !prevShowHistory.current) {
       maxZIndex.current += 1;
-      setZIndexWork(maxZIndex.current);
+      setZIndexHistory(maxZIndex.current);
     }
-    prevShowWork.current = showWork;
-  }, [showWork]);
+    prevShowHistory.current = showHistory;
+  }, [showHistory]);
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
@@ -160,7 +160,7 @@ const Windows = ({ showAbout = false, showWork = false }) => {
         // Function to bring a window to the front
         const bringToFront = (element) => {
           // Find the current highest z-index among all windows
-          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window');
+          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window');
           let currentHighest = 0;
           allWindows.forEach(win => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
@@ -174,7 +174,7 @@ const Windows = ({ showAbout = false, showWork = false }) => {
         };
 
         // Initialize all draggables with proper z-index management
-        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow'];
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow', '#educationHistoryWindow'];
 
         // First pass: Set initial z-index values only
         // Positions are now handled by inline styles in JSX directly
@@ -222,6 +222,7 @@ const Windows = ({ showAbout = false, showWork = false }) => {
         }
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyser, activeSource, context]);
 
   // Effect to play when context is ready and we want to play
@@ -694,27 +695,44 @@ const Windows = ({ showAbout = false, showWork = false }) => {
       <div
         id="workHistoryWindow"
         className="work-window"
-        style={{ display: showWork ? 'block' : 'none', zIndex: zIndexWork }}
+        style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
       >
         {/* Draggable title bar */}
         <div className="dragarea"></div>
         <h3>Work History</h3>
         <div className="work-content">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod 
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-            eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt 
-            in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-            veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-          </p>
+          <h4>Software Developer</h4>
+          <p className="work-company">Fast Enterprises, LLC — New Zealand</p>
+          <p className="work-period">Jan 2021 – Present</p>
+          <ul>
+            <li>Design and development of software solutions for large-scale enterprise systems.</li>
+            <li>Deliver reliable, high-quality updates and bug fixes within strict deadlines.</li>
+            <li>Write optimised SQL queries for large databases.</li>
+            <li>Provide technical guidance to junior developers through mentorship program.</li>
+            <li>Organise and lead the intern projects.</li>
+            <li>Thoroughly tested code migrations. Development &gt; Testing &gt; Staging &gt; Production.</li>
+            <li>Building relationships and working with clients.</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Education History Window */}
+      <div
+        id="educationHistoryWindow"
+        className="education-window"
+        style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
+      >
+        {/* Draggable title bar */}
+        <div className="dragarea"></div>
+        <h3>Education</h3>
+        <div className="education-content">
+          <h4>Bachelor of Science (BSc)</h4>
+          <p className="education-institution">Victoria University of Wellington - Wellington, New Zealand</p>
+          <p className="education-period">2018 - 2020</p>
+          <ul>
+            <li>Double Major in Computer Science and Computer Graphics</li>
+            <li>Specialisation in Machine Learning</li>
+          </ul>
         </div>
       </div>
 

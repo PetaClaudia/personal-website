@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import "../App.css";
 import "./About.css";
-import "./Work.css";
+import "./History.css";
 import Windows from './Windows';
 
 const Home = () => {
@@ -12,12 +12,12 @@ const Home = () => {
   const [showAbout, setShowAbout] = useState(false);
   const [showSkills, setShowSkills] = useState(false);
   const [showContact, setShowContact] = useState(false);
-  const [showWork, setShowWork] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [hasOpenedWindows, setHasOpenedWindows] = useState(false);
   const [zIndices, setZIndices] = useState({
     welcome: 1,
     about: 0,
-    work: 0,
+    history: 0,
     // Add more windows here as needed
   });
 
@@ -40,10 +40,10 @@ const Home = () => {
         bringToFront('about');
         setHasOpenedWindows(true);
       }
-    } else if (windowName === 'work') {
-      setShowWork(prev => !prev);
-      if (!showWork) {
-        bringToFront('work');
+    } else if (windowName === 'history') {
+      setShowHistory(prev => !prev);
+      if (!showHistory) {
+        bringToFront('history');
         setHasOpenedWindows(true);
       }
     }
@@ -54,7 +54,7 @@ const Home = () => {
     setShowAbout(false);
     setShowSkills(false);
     setShowContact(false);
-    setShowWork(false);
+    setShowHistory(false);
     setShowWelcome(false);
     setHasOpenedWindows(false); // Unmount Windows component to reset drag state
   };
@@ -95,11 +95,11 @@ const Home = () => {
       <button
         id="mac-icon"
         className="icon"
-        onClick={() => toggleWindow('work')}
-        aria-label={showWork ? 'Hide work history' : 'Show work history'}
+        onClick={() => toggleWindow('history')}
+        aria-label={showHistory ? 'Hide work and education history' : 'Show work and education history'}
       >
         <img src="/assets/Mac.svg" alt="Mac Icon" />
-        <div className="icon-label">Work</div>
+        <div className="icon-label">History</div>
       </button>
 
       {/* Trash icon */}
@@ -130,7 +130,7 @@ const Home = () => {
       </button>
 
       {/* Windows component - mounted once opened, unmounted only on Clear */}
-      {hasOpenedWindows && <Windows showAbout={showAbout} showWork={showWork} />}
+      {hasOpenedWindows && <Windows showAbout={showAbout} showHistory={showHistory} />}
 
       {/* LinkedIn icon */}
       <a
