@@ -4,6 +4,7 @@ import { Draggable } from "gsap/Draggable";
 import "./About.css";
 import "../App.css";
 import "./History.css";
+import "./Contact.css";
 
 // Register the Draggable plugin for GSAP
 gsap.registerPlugin(Draggable);
@@ -16,8 +17,9 @@ gsap.registerPlugin(Draggable);
  * 
  * @param {boolean} showAbout - Whether to display the 'about' windows
  * @param {boolean} showHistory - Whether to display the 'history' windows (work and education)
+ * @param {boolean} showContact - Whether to display the 'contact' window
  */
-const Windows = ({ showAbout = false, showHistory = false }) => {
+const Windows = ({ showAbout = false, showHistory = false, showContact = false }) => {
   // State management for audio playback and UI
   const [currentSong, setCurrentSong] = useState(0); // Currently selected track index
   const [isPlaying, setIsPlaying] = useState(false); // Play/pause state
@@ -29,8 +31,10 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
   const [hearts, setHearts] = useState([]); // Array of floating hearts with positions
   const [zIndexAbout, setZIndexAbout] = useState(1000); // Z-index for about windows
   const [zIndexHistory, setZIndexHistory] = useState(999); // Z-index for history windows
+  const [zIndexContact, setZIndexContact] = useState(998); // Z-index for contact window
   const prevShowAbout = useRef(showAbout);
   const prevShowHistory = useRef(showHistory);
+  const prevShowContact = useRef(showContact);
   const maxZIndex = useRef(1000);
 
   // Update z-index when windows are opened (transition from false to true)
@@ -51,6 +55,15 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
     }
     prevShowHistory.current = showHistory;
   }, [showHistory]);
+
+  useEffect(() => {
+    // Check if Contact was just opened (false -> true)
+    if (showContact && !prevShowContact.current) {
+      maxZIndex.current += 1;
+      setZIndexContact(maxZIndex.current);
+    }
+    prevShowContact.current = showContact;
+  }, [showContact]);
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
@@ -160,7 +173,7 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
         // Function to bring a window to the front
         const bringToFront = (element) => {
           // Find the current highest z-index among all windows
-          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window');
+          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window, .contact-window');
           let currentHighest = 0;
           allWindows.forEach(win => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
@@ -174,7 +187,7 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
         };
 
         // Initialize all draggables with proper z-index management
-        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow', '#educationHistoryWindow'];
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow', '#educationHistoryWindow', '#contactWindow'];
 
         // First pass: Set initial z-index values only
         // Positions are now handled by inline styles in JSX directly
@@ -222,7 +235,7 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
         }
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyser, activeSource, context]);
 
   // Effect to play when context is ready and we want to play
@@ -406,98 +419,103 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
     }, 2000);
   };
 
-  return (
-    <div style={{ position: 'static', width: '100%', height: '100%' }}>
-      {/* About windows container - Now Playing, Visualiser and Work Fuel windows */}
-      <div className="aboutWindows" style={{ display: showAbout ? 'block' : 'none' }}>
-        {/* Now Playing window - shows current track info and controls */}
-        <div
-          id="nowPlayingWindow"
-          className="nowplaying"
-          style={{ zIndex: zIndexAbout }}
+  /**
+   * Render Now Playing Window
+   * Shows current track info and playback controls
+   */
+  const renderNowPlayingWindow = () => (
+    <div
+      id="nowPlayingWindow"
+      className="nowplaying"
+      style={{ zIndex: zIndexAbout }}
+    >
+      <h3>Now Playing</h3>
+      <div>
+        <button
+          id="play"
+          className={isPlaying ? "playing" : ""}
+          onClick={handlePlayClick}
         >
-          <h3>Now Playing</h3>
-          {/* Play/Pause button with triangle icon */}
-          <div>
+          <span></span>
+        </button>
+      </div>
+      <div>
+        <div>
+          <h4 id="artist">{nowPlaying[currentSong]}</h4>
+          <h4 id="song">{songPlaying[currentSong]}</h4>
+        </div>
+      </div>
+      <div>
+        <button id="prev" onClick={playPrev}>
+          ‹ Prev
+        </button>
+        <button id="next" onClick={playNext}>
+          Next ›
+        </button>
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Visualiser Window
+   * Shows audio frequency bars
+   */
+  const renderVisualizerWindow = () => (
+    <div
+      id="analyzerWindow"
+      className="analyzer"
+      style={{ zIndex: zIndexAbout }}
+    >
+      <h3>Visualiser</h3>
+      <div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Work Fuel Window
+   * Shows ASCII art of matcha (home) or coffee (office)
+   */
+  const renderWorkFuelWindow = () => (
+    <div
+      id="workFuelWindow"
+      className="workfuel"
+      style={{ zIndex: zIndexAbout }}
+    >
+      <div className="dragarea"></div>
+      <h3>Work Fuel</h3>
+      <div className="frame">
+        <div className="work-fuel-content">
+          <div className="work-location-toggle">
             <button
-              id="play"
-              className={isPlaying ? "playing" : ""}
-              onClick={handlePlayClick}
+              className={workLocation === "home" ? "active" : ""}
+              onClick={() => setWorkLocation("home")}
             >
-              <span></span>
+              Work from home
+            </button>
+            <button
+              className={workLocation === "office" ? "active" : ""}
+              onClick={() => setWorkLocation("office")}
+            >
+              In office
             </button>
           </div>
-          {/* Track information display */}
-          <div>
-            <div>
-              <h4 id="artist">{nowPlaying[currentSong]}</h4>
-              <h4 id="song">{songPlaying[currentSong]}</h4>
-            </div>
-          </div>
-          {/* Navigation buttons */}
-          <div>
-            <button id="prev" onClick={playPrev}>
-              ‹ Prev
-            </button>
-            <button id="next" onClick={playNext}>
-              Next ›
-            </button>
-          </div>
-        </div>
 
-        {/* Audio visualiser window - shows frequency bars */}
-        <div
-          id="analyzerWindow"
-          className="analyzer"
-          style={{ zIndex: zIndexAbout }}
-        >
-          <h3>Visualiser</h3>
-          <div>
-            {/* 10 frequency bars that animate based on audio data */}
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-
-        {/* Work Fuel window */}
-        <div
-          id="workFuelWindow"
-          className="workfuel"
-          style={{ zIndex: zIndexAbout }}
-        >
-          <div className="dragarea"></div>
-          <h3>Work Fuel</h3>
-          <div className="frame">
-            <div className="work-fuel-content">
-              {/* Toggle button */}
-              <div className="work-location-toggle">
-                <button
-                  className={workLocation === "home" ? "active" : ""}
-                  onClick={() => setWorkLocation("home")}
-                >
-                  Work from home
-                </button>
-                <button
-                  className={workLocation === "office" ? "active" : ""}
-                  onClick={() => setWorkLocation("office")}
-                >
-                  In office
-                </button>
-              </div>
-
-              {/* Work location ASCII art displays */}
-              {workLocation === "home" && (
-                <div className="matcha-container">
-                  <pre className="matcha-ascii">
-                    {`                          ░░▒▒▒░░░░▒▒▒▒░                          
+          {workLocation === "home" && (
+            <div className="matcha-container">
+              <pre className="matcha-ascii">
+                {/* Matcha ASCII art - keeping original from lines 560-614 */}
+                {`                          ░░▒▒▒░░░░▒▒▒▒░                          
                ░ ░░░░░░▒░░   ░░       ░        ░▓░                
            ▒░            ░░ ░░░░░░░░░░░░             ▓░           
         ▒  ░              ░░ ▒▒▓███▒▒▒▒▒▒▒▒░░ ░         ▒▓        
@@ -553,13 +571,14 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
                 ░ ░░▒▒▒████████░▒█▓▓▓▓▓█████▓▒▒▓▒░                
                    ▒██▒░▒▒▒▒▒▒▒░▒▒▒▓▓▒▓▓██▓▒█▒▒                   
                            ░▓██▒░▓██▒                             `}
-                  </pre>
-                </div>
-              )}
-              {workLocation === "office" && (
-                <div className="coffee-cup-container">
-                  <pre className="coffee-cup-ascii">
-                    {`                                                                   
+              </pre>
+            </div>
+          )}
+          {workLocation === "office" && (
+            <div className="coffee-cup-container">
+              <pre className="coffee-cup-ascii">
+                {/* Coffee ASCII art - keeping original from lines 621-676 */}
+                {`                                                                   
            █████████████████████████████████████████████           
       ████████████ ▒░ ░▒▒▒▓▓▓▓▓▓█████████████████████████████      
       ██▓░  ████████████████████▓   ▒▒    ░▒▒▒▒▒▓▓▓██▓█   ▒▒█      
@@ -615,160 +634,232 @@ const Windows = ({ showAbout = false, showHistory = false }) => {
                  ░░▒              ░░░░░░░░░▒▒██░                   
                     ░▒▓                ░▒▒▓█▒                      
                                                                    `}
-                  </pre>
-                </div>
-              )}
+              </pre>
             </div>
-          </div>
+          )}
         </div>
-        {/* Merlin dog frame window */}
-        <div id="dogFrame"
-        className="dogframe"
-        style={{ zIndex: zIndexAbout }}>
-        <div className="dragarea"></div>
-        <h3>Merlin</h3>
-        <div className="dog-image-container" onClick={handleMerlinClick}>
-          <img src="/assets/Merlin1.jpg" alt="Border Collie named Merlin" />
-          {/* Floating hearts */}
-          {hearts.map(heart => (
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Merlin Dog Frame Window
+   * Shows picture of Merlin with clickable hearts
+   */
+  const renderDogFrameWindow = () => (
+    <div id="dogFrame"
+      className="dogframe"
+      style={{ zIndex: zIndexAbout }}>
+      <div className="dragarea"></div>
+      <h3>Merlin</h3>
+      <div className="dog-image-container" onClick={handleMerlinClick}>
+        <img src="/assets/Merlin1.jpg" alt="Border Collie named Merlin" />
+        {/* Floating hearts */}
+        {hearts.map(heart => (
+          <img
+            key={heart.id}
+            src="/assets/pixel-heart.gif"
+            alt="heart"
+            className="floating-heart"
+            style={{
+              left: `${heart.x}px`,
+              top: `${heart.y}px`
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Playlist Window
+   * Shows album artwork and track list
+   */
+  const renderPlaylistWindow = () => (
+    <div
+      id="playlistWindow"
+      className="window"
+      style={{ zIndex: zIndexAbout }}
+    >
+      {/* Draggable title bar */}
+      <div className="dragarea"></div>
+      <h3>Work Playlist</h3>
+      <div className="frame">
+        {/* Album artwork carousel */}
+        <div className="imgwrap">
+          {albumImages.map((img, index) => (
             <img
-              key={heart.id}
-              src="/assets/pixel-heart.gif"
-              alt="heart"
-              className="floating-heart"
-              style={{
-                left: `${heart.x}px`,
-                top: `${heart.y}px`
-              }}
+              key={index}
+              className={index === currentSong ? "active" : ""}
+              src={img}
+              alt={`Album ${index + 1}`}
             />
           ))}
         </div>
-      </div>
-      {/* End of dogFrame */}
-      {/* Main album list window */}
-      <div
-        id="playlistWindow"
-          className="window"
-          style={{ zIndex: zIndexAbout }}
-        >
-        {/* Draggable title bar */}
-        <div className="dragarea"></div>
-        <h3>Work Playlist</h3>
-        <div className="frame">
-          {/* Album artwork carousel */}
-          <div className="imgwrap">
-            {albumImages.map((img, index) => (
-              <img
-                key={index}
-                className={index === currentSong ? "active" : ""}
-                src={img}
-                alt={`Album ${index + 1}`}
-              />
+        {/* Track list */}
+        <div>
+          <ul>
+            {nowPlaying.map((artist, index) => (
+              <li key={index}>
+                <a
+                  className={index === currentSong ? "active" : ""}
+                  href={trackUrls[index]}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleTrackClick(index);
+                  }}
+                >
+                  {artist} - <span>{songPlaying[index]}</span>
+                </a>
+              </li>
             ))}
-          </div>
-          {/* Track list */}
-          <div>
-            <ul>
-              {nowPlaying.map((artist, index) => (
-                <li key={index}>
-                  <a
-                    className={index === currentSong ? "active" : ""}
-                    href={trackUrls[index]}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleTrackClick(index);
-                    }}
-                  >
-                    {artist} - <span>{songPlaying[index]}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-      {/* End of playlistWindow */}
-      </div>
-      {/* End of aboutWindows container */}
-
-      {/* Work History Window */}
-      <div
-        id="workHistoryWindow"
-        className="work-window"
-        style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
-      >
-        {/* Draggable title bar */}
-        <div className="dragarea"></div>
-        <h3>Work History</h3>
-        <div className="work-content">
-          <h4>Software Developer</h4>
-          <p className="work-company">Fast Enterprises, LLC — New Zealand</p>
-          <p className="work-period">Jan 2021 – Present</p>
-          <ul>
-            <li>Design and development of software solutions for large-scale enterprise systems.</li>
-            <li>Deliver reliable, high-quality updates and bug fixes within strict deadlines.</li>
-            <li>Write optimised SQL queries for large databases.</li>
-            <li>Provide technical guidance to junior developers through mentorship program.</li>
-            <li>Organise and lead the intern projects.</li>
-            <li>Thoroughly tested code migrations. Development &gt; Testing &gt; Staging &gt; Production.</li>
-            <li>Building relationships and working with clients.</li>
           </ul>
         </div>
       </div>
-
-      {/* Education History Window */}
-      <div
-        id="educationHistoryWindow"
-        className="education-window"
-        style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
-      >
-        {/* Draggable title bar */}
-        <div className="dragarea"></div>
-        <h3>Education</h3>
-        <div className="education-content">
-          <h4>Bachelor of Science (BSc)</h4>
-          <p className="education-institution">Victoria University of Wellington - Wellington, New Zealand</p>
-          <p className="education-period">2018 - 2020</p>
-          <ul>
-            <li>Double Major in Computer Science and Computer Graphics</li>
-            <li>Specialisation in Machine Learning</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* SVG filter for dithering effect - makes images look pixelated */}
-      <svg imageRendering="optimizeSpeed">
-        <filter
-          colorInterpolationFilters="sRGB"
-          height="100%"
-          id="dither"
-          width="100%"
-          x="0"
-          y="0"
-        >
-          <feImage
-            height="4"
-            width="4"
-            xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA+UlEQVR42gXBERTCUABA0X/OYDAYDAZBEAyCIBgMgiAIgiAYBINgEAwGgyAIBsFgMAiCIAiCIAgGQTAYDAaDIAiCwWDwulcIIXg8HgwGA36/H4qi8Hq9sCyLtm0Rm82G0WjE5XJhvV4ThiHT6ZT7/U4QBIhut0tVVaiqSpZl9Pt9vt8vnU6HsiwRh8OB5XLJfr9nNptxPp9xXZckSbBtGyHLMs/nE9M0aZoGSZJI05ThcEhd14jdbsdkMuF2u+H7PtvtlvF4zPV6xfM8hGEYfD4fdF2nKAp6vR7v9xtN08jzHHE6nVitVsRxzGKx4Hg84jgOURQxn8/5A7oKnYRU4EpfAAAAAElFTkSuQmCC"
-          />
-          <feTile />
-          <feComposite
-            in="SourceGraphic"
-            k1="0"
-            k2="1"
-            k3="1"
-            k4="-0.5"
-            operator="arithmetic"
-          />
-          <feComponentTransfer>
-            <feFuncR tableValues="0 1" type="discrete" />
-            <feFuncG tableValues="0 1" type="discrete" />
-            <feFuncB tableValues="0 1" type="discrete" />
-          </feComponentTransfer>
-        </filter>
-      </svg>
     </div>
+  );
+
+  /**
+   * Render Work History Window
+   * Shows work experience details
+   */
+  const renderWorkHistoryWindow = () => (
+    <div
+      id="workHistoryWindow"
+      className="work-window"
+      style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
+    >
+      {/* Draggable title bar */}
+      <div className="dragarea"></div>
+      <h3>Work History</h3>
+      <div className="work-content">
+        <h4>Software Developer</h4>
+        <p className="work-company">Fast Enterprises, LLC — New Zealand</p>
+        <p className="work-period">Jan 2021 – Present</p>
+        <ul>
+          <li>Design and development of software solutions for large-scale enterprise systems.</li>
+          <li>Deliver reliable, high-quality updates and bug fixes within strict deadlines.</li>
+          <li>Write optimised SQL queries for large databases.</li>
+          <li>Provide technical guidance to junior developers through mentorship program.</li>
+          <li>Organise and lead the intern projects.</li>
+          <li>Thoroughly tested code migrations. Development &gt; Testing &gt; Staging &gt; Production.</li>
+          <li>Building relationships and working with clients.</li>
+        </ul>
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Education History Window
+   * Shows education details
+   */
+  const renderEducationHistoryWindow = () => (
+    <div
+      id="educationHistoryWindow"
+      className="education-window"
+      style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
+    >
+      {/* Draggable title bar */}
+      <div className="dragarea"></div>
+      <h3>Education</h3>
+      <div className="education-content">
+        <h4>Bachelor of Science (BSc)</h4>
+        <p className="education-institution">Victoria University of Wellington - Wellington, New Zealand</p>
+        <p className="education-period">2018 - 2020</p>
+        <ul>
+          <li>Double Major in Computer Science and Computer Graphics</li>
+          <li>Specialisation in Machine Learning</li>
+        </ul>
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Contact Window
+   * Shows contact information
+   */
+  const renderContactWindow = () => (
+    <div
+      id="contactWindow"
+      className="contact-window"
+      style={{ display: showContact ? 'block' : 'none', zIndex: zIndexContact }}
+    >
+      {/* Draggable title bar */}
+      <div className="dragarea"></div>
+      <h3>Contact</h3>
+      <div className="contact-content">
+        <h4>Email me</h4>
+        <p><a href="mailto:petadouglas@outlook.com">petadouglas@outlook.com</a></p>
+        
+        <h4>Phone number</h4>
+        <p className="phone-number"></p>
+      </div>
+    </div>
+  );
+
+  /**
+   * SVG filter for dithering effect - makes images look pixelated
+   */
+  const ditherSVG = () => (
+    <svg imageRendering="optimizeSpeed">
+      <filter
+        colorInterpolationFilters="sRGB"
+        height="100%"
+        id="dither"
+        width="100%"
+        x="0"
+        y="0"
+      >
+        <feImage
+          height="4"
+          width="4"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA+UlEQVR42gXBERTCUABA0X/OYDAYDAZBEAyCIBgMgiAIgiAYBINgEAwGgyAIBsFgMAiCIAiCIAgGQTAYDAaDIAiCwWDwulcIIXg8HgwGA36/H4qi8Hq9sCyLtm0Rm82G0WjE5XJhvV4ThiHT6ZT7/U4QBIhut0tVVaiqSpZl9Pt9vt8vnU6HsiwRh8OB5XLJfr9nNptxPp9xXZckSbBtGyHLMs/nE9M0aZoGSZJI05ThcEhd14jdbsdkMuF2u+H7PtvtlvF4zPV6xfM8hGEYfD4fdF2nKAp6vR7v9xtN08jzHHE6nVitVsRxzGKx4Hg84jgOURQxn8/5A7oKnYRU4EpfAAAAAElFTkSuQmCC"
+        />
+        <feTile />
+        <feComposite
+          in="SourceGraphic"
+          k1="0"
+          k2="1"
+          k3="1"
+          k4="-0.5"
+          operator="arithmetic"
+        />
+        <feComponentTransfer>
+          <feFuncR tableValues="0 1" type="discrete" />
+          <feFuncG tableValues="0 1" type="discrete" />
+          <feFuncB tableValues="0 1" type="discrete" />
+        </feComponentTransfer>
+      </filter>
+    </svg>
+  );
+
+  return (
+    <div style={{ position: 'static', width: '100%', height: '100%' }}>
+      
+      {/* About windows container - Now Playing, Visualiser and Work Fuel windows */}
+      <div className="aboutWindows" style={{ display: showAbout ? 'block' : 'none' }}>
+        {renderNowPlayingWindow()}
+        {renderVisualizerWindow()}
+        {renderWorkFuelWindow()}
+        {renderDogFrameWindow()}
+        {renderPlaylistWindow()}
+      </div>
+
+      {/* History windows container - Work History and Education History windows */}
+      <div className="historyWindows" style={{ display: showHistory ? 'block' : 'none' }}>
+        {renderWorkHistoryWindow()}
+        {renderEducationHistoryWindow()}
+      </div>
+
+      {/* Contact window container - Contact window */}
+      <div className="contactWindows" style={{ display: showContact ? 'block' : 'none' }}>
+        {renderContactWindow()}
+      </div>
+
+      {ditherSVG()}
+    </div >
   );
 };
 
 export default Windows;
+

@@ -18,6 +18,7 @@ const Home = () => {
     welcome: 1,
     about: 0,
     history: 0,
+    contact: 0,
     // Add more windows here as needed
   });
 
@@ -44,6 +45,12 @@ const Home = () => {
       setShowHistory(prev => !prev);
       if (!showHistory) {
         bringToFront('history');
+        setHasOpenedWindows(true);
+      }
+    } else if (windowName === 'contact') {
+      setShowContact(prev => !prev);
+      if (!showContact) {
+        bringToFront('contact');
         setHasOpenedWindows(true);
       }
     }
@@ -130,7 +137,7 @@ const Home = () => {
       </button>
 
       {/* Windows component - mounted once opened, unmounted only on Clear */}
-      {hasOpenedWindows && <Windows showAbout={showAbout} showHistory={showHistory} />}
+      {hasOpenedWindows && <Windows showAbout={showAbout} showHistory={showHistory} showContact={showContact} />}
 
       {/* LinkedIn icon */}
       <a
@@ -146,10 +153,15 @@ const Home = () => {
       </a>
 
       {/* Volume icon */}
-      <div id="volume-icon" className="icon">
+      <button
+        id="volume-icon"
+        className="icon"
+        onClick={() => toggleWindow('contact')}
+        aria-label={showContact ? 'Hide contact information' : 'Show contact information'}
+      >
         <img src="/assets/Volume.svg" alt="Contact" />
         <div className="icon-label">Contact me!</div>
-      </div>
+      </button>
 
       {/* Welcome Panel */}
       {showWelcome && (
