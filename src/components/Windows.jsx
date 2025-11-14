@@ -5,6 +5,8 @@ import "./About.css";
 import "../App.css";
 import "./History.css";
 import "./Contact.css";
+import "./Skills.css";
+import Skills from "./Skills";
 
 // Register the Draggable plugin for GSAP
 gsap.registerPlugin(Draggable);
@@ -18,8 +20,9 @@ gsap.registerPlugin(Draggable);
  * @param {boolean} showAbout - Whether to display the 'about' windows
  * @param {boolean} showHistory - Whether to display the 'history' windows (work and education)
  * @param {boolean} showContact - Whether to display the 'contact' window
+ * @param {boolean} showSkills - Whether to display the 'skills' window
  */
-const Windows = ({ showAbout = false, showHistory = false, showContact = false }) => {
+const Windows = ({ showAbout = false, showHistory = false, showContact = false, showSkills = false }) => {
   // State management for audio playback and UI
   const [currentSong, setCurrentSong] = useState(0); // Currently selected track index
   const [isPlaying, setIsPlaying] = useState(false); // Play/pause state
@@ -32,9 +35,11 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
   const [zIndexAbout, setZIndexAbout] = useState(1000); // Z-index for about windows
   const [zIndexHistory, setZIndexHistory] = useState(999); // Z-index for history windows
   const [zIndexContact, setZIndexContact] = useState(998); // Z-index for contact window
+  const [zIndexSkills, setZIndexSkills] = useState(997); // Z-index for skills window
   const prevShowAbout = useRef(showAbout);
   const prevShowHistory = useRef(showHistory);
   const prevShowContact = useRef(showContact);
+  const prevShowSkills = useRef(showSkills);
   const maxZIndex = useRef(1000);
 
   // Update z-index when windows are opened (transition from false to true)
@@ -64,6 +69,15 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
     }
     prevShowContact.current = showContact;
   }, [showContact]);
+
+  useEffect(() => {
+    // Check if Skills was just opened (false -> true)
+    if (showSkills && !prevShowSkills.current) {
+      maxZIndex.current += 1;
+      setZIndexSkills(maxZIndex.current);
+    }
+    prevShowSkills.current = showSkills;
+  }, [showSkills]);
 
   // Music data arrays - all arrays are parallel (same indices correspond to same track)
   const nowPlaying = [
@@ -173,7 +187,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
         // Function to bring a window to the front
         const bringToFront = (element) => {
           // Find the current highest z-index among all windows
-          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window, .contact-window');
+          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window, .contact-window, .skills-window');
           let currentHighest = 0;
           allWindows.forEach(win => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
@@ -187,7 +201,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
         };
 
         // Initialize all draggables with proper z-index management
-        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow', '#educationHistoryWindow', '#contactWindow'];
+        const windowIds = ['#playlistWindow', '#nowPlayingWindow', '#analyzerWindow', '#workFuelWindow', '#dogFrame', '#workHistoryWindow', '#educationHistoryWindow', '#contactWindow', '#skillsWindow'];
 
         // First pass: Set initial z-index values only
         // Positions are now handled by inline styles in JSX directly
@@ -788,11 +802,30 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
       <div className="dragarea"></div>
       <h3>Contact</h3>
       <div className="contact-content">
-        <h4>Email me</h4>
+        <h4>Email</h4>
         <p><a href="mailto:petadouglas@outlook.com">petadouglas@outlook.com</a></p>
         
         <h4>Phone number</h4>
         <p className="phone-number"></p>
+      </div>
+    </div>
+  );
+
+  /**
+   * Render Skills Window
+   * Shows skills information with scrolling effect
+   */
+  const renderSkillsWindow = () => (
+    <div
+      id="skillsWindow"
+      className="skills-window"
+      style={{ display: showSkills ? 'block' : 'none', zIndex: zIndexSkills }}
+    >
+      {/* Draggable title bar */}
+      <div className="dragarea"></div>
+      <h3>Skills</h3>
+      <div className="skills-content">
+        <Skills />
       </div>
     </div>
   );
@@ -854,6 +887,11 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false }
       {/* Contact window container - Contact window */}
       <div className="contactWindows" style={{ display: showContact ? 'block' : 'none' }}>
         {renderContactWindow()}
+      </div>
+
+      {/* Skills window container - Skills window */}
+      <div className="skillsWindows" style={{ display: showSkills ? 'block' : 'none' }}>
+        {renderSkillsWindow()}
       </div>
 
       {ditherSVG()}

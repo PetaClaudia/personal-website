@@ -19,6 +19,7 @@ const Home = () => {
     about: 0,
     history: 0,
     contact: 0,
+    skills: 0,
     // Add more windows here as needed
   });
 
@@ -51,6 +52,12 @@ const Home = () => {
       setShowContact(prev => !prev);
       if (!showContact) {
         bringToFront('contact');
+        setHasOpenedWindows(true);
+      }
+    } else if (windowName === 'skills') {
+      setShowSkills(prev => !prev);
+      if (!showSkills) {
+        bringToFront('skills');
         setHasOpenedWindows(true);
       }
     }
@@ -120,10 +127,15 @@ const Home = () => {
       </button>
 
       {/* Bomb icon */}
-      <div id="bomb-icon" className="icon">
+      <button
+        id="bomb-icon"
+        className="icon"
+        onClick={() => toggleWindow('skills')}
+        aria-label={showSkills ? 'Hide skills' : 'Show skills'}
+      >
         <img src="/assets/Bomb.svg" alt="Bomb" />
         <div className="icon-label">My skills</div>
-      </div>
+      </button>
 
       {/* Music icon */}
       <button
@@ -137,7 +149,7 @@ const Home = () => {
       </button>
 
       {/* Windows component - mounted once opened, unmounted only on Clear */}
-      {hasOpenedWindows && <Windows showAbout={showAbout} showHistory={showHistory} showContact={showContact} />}
+      {hasOpenedWindows && <Windows showAbout={showAbout} showHistory={showHistory} showContact={showContact} showSkills={showSkills} />}
 
       {/* LinkedIn icon */}
       <a

@@ -10,7 +10,7 @@
   position: absolute;
   left: 30%;
   top: 30%;
-  width: 500px;
+  width: 300px;
   height: auto;
   max-height: 500px;
   box-sizing: border-box;
@@ -86,7 +86,7 @@
 }
 
 .contact-content .phone-number:hover::before {
-  content: "Wouldn't you like to know.";
+  content: "Wouldn't you like to know!";
 }
 
 /* Container positioning - removed transitions to match history windows */
