@@ -64,6 +64,47 @@
   margin-top: 0;
 }
 
+/* Email row: icon + label + address */
+.contact-email-row {
+  display: flex;
+  align-items: center; /* vertically center icon vs text block */
+  gap: 8px;
+}
+
+.contact-email-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Phone row: icon + label + masked number */
+.contact-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.contact-phone-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-email-icon {
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  margin-right: 6px;
+  vertical-align: text-bottom;
+}
+
+.contact-phone-icon {
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  margin-right: 6px;
+  vertical-align: text-bottom;
+}
+
 /* Contact content links */
 .contact-content a {
   color: var(--textColor);
@@ -86,7 +127,7 @@
 }
 
 .contact-content .phone-number:hover::before {
-  content: "Wouldn't you like to know!";
+  content: "Let's just email first :p";
 }
 
 /* Container positioning - removed transitions to match history windows */

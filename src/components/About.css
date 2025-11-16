@@ -585,3 +585,19 @@
   opacity: 1;
 }
 
+/* "Pat me" text that follows cursor on Merlin window */
+.pat-me-text {
+  position: absolute;
+  font-family: "Chicago", monospace;
+  font-size: 12px;
+  color: #000;
+  background: #fff;
+  padding: 2px 6px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 10000;
+  white-space: nowrap;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+

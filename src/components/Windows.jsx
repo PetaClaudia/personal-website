@@ -36,6 +36,8 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
   const [zIndexHistory, setZIndexHistory] = useState(999); // Z-index for history windows
   const [zIndexContact, setZIndexContact] = useState(998); // Z-index for contact window
   const [zIndexSkills, setZIndexSkills] = useState(997); // Z-index for skills window
+  const [isHoveringMerlin, setIsHoveringMerlin] = useState(false); // Track if hovering over Merlin
+  const patMeRef = useRef(null); // Ref for the "Pat me" text element
   const prevShowAbout = useRef(showAbout);
   const prevShowHistory = useRef(showHistory);
   const prevShowContact = useRef(showContact);
@@ -410,6 +412,40 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
   };
 
   /**
+   * Handle mouse move over Merlin - position text next to cursor relative to container
+   */
+  const handleMerlinMouseMove = (e) => {
+    if (patMeRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      patMeRef.current.style.left = `${x}px`;
+      patMeRef.current.style.top = `${y}px`;
+    }
+  };
+
+  /**
+   * Handle mouse enter on Merlin image
+   */
+  const handleMerlinMouseEnter = (e) => {
+    setIsHoveringMerlin(true);
+    if (patMeRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      patMeRef.current.style.left = `${x}px`;
+      patMeRef.current.style.top = `${y}px`;
+    }
+  };
+
+  /**
+   * Handle mouse leave on Merlin image
+   */
+  const handleMerlinMouseLeave = () => {
+    setIsHoveringMerlin(false);
+  };
+
+  /**
    * Handle click on Merlin picture - create floating heart
    */
   const handleMerlinClick = (e) => {
@@ -666,8 +702,16 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ zIndex: zIndexAbout }}>
       <div className="dragarea"></div>
       <h3>Merlin</h3>
-      <div className="dog-image-container" onClick={handleMerlinClick}>
-        <img src="/assets/Merlin1.jpg" alt="Border Collie named Merlin" />
+      <div
+        className="dog-image-container"
+        onClick={handleMerlinClick}
+        onMouseEnter={handleMerlinMouseEnter}
+        onMouseLeave={handleMerlinMouseLeave}
+        onMouseMove={handleMerlinMouseMove}>
+        <img
+          src="/assets/Merlin1.jpg"
+          alt="Border Collie named Merlin"
+        />
         {/* Floating hearts */}
         {hearts.map(heart => (
           <img
@@ -681,6 +725,14 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
             }}
           />
         ))}
+        {/* "Pat me" text that follows cursor (inside container) */}
+        <div
+          ref={patMeRef}
+          className="pat-me-text"
+          style={{ pointerEvents: 'none', left: '0px', top: '0px', display: isHoveringMerlin ? 'block' : 'none' }}
+        >
+          Pat me
+        </div>
       </div>
     </div>
   );
@@ -802,11 +854,31 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       <div className="dragarea"></div>
       <h3>Contact</h3>
       <div className="contact-content">
-        <h4>Email</h4>
-        <p><a href="mailto:petadouglas@outlook.com">petadouglas@outlook.com</a></p>
-        
-        <h4>Phone number</h4>
-        <p className="phone-number"></p>
+        <div className="contact-email-row">
+          <img
+            src="/assets/Prompt.svg"
+            alt="Prompt icon"
+            className="contact-email-icon"
+          />
+          <div className="contact-email-text">
+            <h4>Email</h4>
+            <p className="contact-email-address">
+              <a href="mailto:petadouglas@outlook.com">petadouglas@outlook.com</a>
+            </p>
+          </div>
+        </div>
+
+        <div className="contact-phone-row">
+          <img
+            src="/assets/Alert.svg"
+            alt="Alert icon"
+            className="contact-phone-icon"
+          />
+          <div className="contact-phone-text">
+            <h4>Phone number</h4>
+            <p className="phone-number"></p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -868,7 +940,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
 
   return (
     <div style={{ position: 'static', width: '100%', height: '100%' }}>
-      
+
       {/* About windows container - Now Playing, Visualiser and Work Fuel windows */}
       <div className="aboutWindows" style={{ display: showAbout ? 'block' : 'none' }}>
         {renderNowPlayingWindow()}

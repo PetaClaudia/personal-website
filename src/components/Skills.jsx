@@ -28,7 +28,7 @@ const Skills = () => {
     'Blender.',
     'Nuke.',
     'Maya.',
-    'I can learn more.'
+    'I can learn more!'
   ];
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import "../App.css";
 import "./About.css";
 import "./History.css";
 import Windows from './Windows';
+import DraggableText from './DraggableText';
 
 const Home = () => {
   const containerRef = useRef(null);
@@ -105,6 +106,9 @@ const Home = () => {
       <div id="job-title">Software Developer</div>
       <div id="date">{date}</div>
 
+      {/* Draggable background text */}
+      <DraggableText />
+
       {/* Mac icon  Top Right*/}
       <button
         id="mac-icon"
@@ -183,7 +187,6 @@ const Home = () => {
           onClick={() => bringToFront('welcome')}
         >
           <div className="welcome-content">
-            <h1>Welcome!</h1>
             <p>I am a Software Developer with 5 years of backend experience, developing and maintaining enterprise applications and eServices. <br />
               <br />
               Off the clock I'm using web development to explore my creative side, building visually engaging, interactive sites. <br />
