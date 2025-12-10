@@ -84,7 +84,7 @@ const Skills = () => {
         </div>
       </div>
       <div className="skills-scroll-indicator">
-        <img src="/assets/down-arrow.svg" alt="Scroll down" />
+        <img src={`${process.env.PUBLIC_URL}/assets/down-arrow.svg`} alt="Scroll down" />
       </div>
     </>
   );

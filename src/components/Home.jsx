@@ -116,7 +116,7 @@ const Home = () => {
         onClick={() => toggleWindow('history')}
         aria-label={showHistory ? 'Hide work and education history' : 'Show work and education history'}
       >
-        <img src="/assets/Mac.svg" alt="Mac Icon" />
+        <img src={`${process.env.PUBLIC_URL}/assets/Mac.svg`} alt="Mac Icon" />
         <div className="icon-label">History</div>
       </button>
 
@@ -126,7 +126,7 @@ const Home = () => {
         className="icon"
         onClick={() => clearScreen()}>
 
-        <img src="/assets/Trash.svg" alt="Trash" />
+        <img src={`${process.env.PUBLIC_URL}/assets/Trash.svg`} alt="Trash" />
         <div className="icon-label">Clear</div>
       </button>
 
@@ -137,7 +137,7 @@ const Home = () => {
         onClick={() => toggleWindow('skills')}
         aria-label={showSkills ? 'Hide skills' : 'Show skills'}
       >
-        <img src="/assets/Bomb.svg" alt="Bomb" />
+        <img src={`${process.env.PUBLIC_URL}/assets/Bomb.svg`} alt="Bomb" />
         <div className="icon-label">My skills</div>
       </button>
 
@@ -148,7 +148,7 @@ const Home = () => {
         onClick={() => toggleWindow('about')}
         aria-label={showAbout ? 'Hide Desk inventory' : 'Show what\'s on my desk'}
       >
-        <img src="/assets/Music.svg" alt="" aria-hidden="true" />
+        <img src={`${process.env.PUBLIC_URL}/assets/Music.svg`} alt="" aria-hidden="true" />
         <div className="icon-label">At my desk</div>
       </button>
 
@@ -163,7 +163,7 @@ const Home = () => {
         style={{ textDecoration: 'none' }}
       >
         <div id="linkedin-icon" className="icon">
-          <img src="/assets/linkedin.svg" alt="LinkedIn" />
+          <img src={`${process.env.PUBLIC_URL}/assets/linkedin.svg`} alt="LinkedIn" />
           <div className="icon-label">LinkedIn</div>
         </div>
       </a>
@@ -175,7 +175,7 @@ const Home = () => {
         onClick={() => toggleWindow('contact')}
         aria-label={showContact ? 'Hide contact information' : 'Show contact information'}
       >
-        <img src="/assets/Volume.svg" alt="Contact" />
+        <img src={`${process.env.PUBLIC_URL}/assets/Volume.svg`} alt="Contact" />
         <div className="icon-label">Contact me!</div>
       </button>
 

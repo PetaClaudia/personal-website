@@ -709,14 +709,14 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
         onMouseLeave={handleMerlinMouseLeave}
         onMouseMove={handleMerlinMouseMove}>
         <img
-          src="/assets/Merlin1.jpg"
+          src={`${process.env.PUBLIC_URL}/assets/Merlin1.jpg`}
           alt="Border Collie named Merlin"
         />
         {/* Floating hearts */}
         {hearts.map(heart => (
           <img
             key={heart.id}
-            src="/assets/pixel-heart.gif"
+            src={`${process.env.PUBLIC_URL}/assets/pixel-heart.gif`}
             alt="heart"
             className="floating-heart"
             style={{
@@ -856,7 +856,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       <div className="contact-content">
         <div className="contact-email-row">
           <img
-            src="/assets/Prompt.svg"
+            src={`${process.env.PUBLIC_URL}/assets/Prompt.svg`}
             alt="Prompt icon"
             className="contact-email-icon"
           />
@@ -870,7 +870,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
 
         <div className="contact-phone-row">
           <img
-            src="/assets/Alert.svg"
+            src={`${process.env.PUBLIC_URL}/assets/Alert.svg`}
             alt="Alert icon"
             className="contact-phone-icon"
           />
