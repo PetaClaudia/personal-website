@@ -17,7 +17,7 @@
 }
 
 /* Draggable area - title bar for moving the window */
-.skills-window .dragarea {
+.skills-window .drag-area {
   position: absolute;
   pointer-events: all;
   z-index: 999;
@@ -33,7 +33,7 @@
   padding: 0;
   pointer-events: all;
   height: 100%;
-  border: 2px inset #ccc;
+  border: 2px inset var(--lightGrey);
   cursor: var(--default);
   overflow: hidden;
   position: relative;

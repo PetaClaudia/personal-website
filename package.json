@@ -13,18 +13,51 @@
   "devDependencies": {
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
+    "stylelint": "^16.1.0",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-order": "^6.0.4",
     "tailwindcss": "^3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:css": "stylelint 'src/**/*.css'"
   },
   "eslintConfig": {
     "extends": [
       "react-app"
-    ]
+    ],
+    "rules": {
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
+      "react/jsx-pascal-case": [
+        "error",
+        {
+          "allowAllCaps": true,
+          "ignore": []
+        }
+      ]
+    }
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard"
+    ],
+    "rules": {
+      "selector-class-pattern": [
+        "^[a-z][a-z0-9-]*$",
+        {
+          "resolveNestedSelectors": true,
+          "message": "Use kebab-case for class names"
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

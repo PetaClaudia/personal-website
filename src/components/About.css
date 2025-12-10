@@ -1,17 +1,10 @@
-/* Main container for all windows */
-#containerRef {
-  position: relative;
-  min-height: 600px;
-  padding: 10px;
-}
-
 /* About windows container - optional grouping for about-related windows */
-.aboutWindows {
+.about-windows {
   /* No specific styling needed - just a logical container */
 }
 
 /* Album artwork container - square aspect ratio */
-.imgwrap {
+.img-wrap {
   width: 275px;
   aspect-ratio: 1/1;
   position: relative;
@@ -19,7 +12,7 @@
 }
 
 /* Album artwork styling - dithered and pixelated effect */
-.imgwrap img {
+.img-wrap img {
   box-shadow: 0 0 0 1px; /* Black border around images */
   width: 100%;
   height: auto;
@@ -30,16 +23,16 @@
 }
 
 /* Active album artwork - shown on top */
-.imgwrap img.active {
+.img-wrap img.active {
   z-index: 1;
 }
 
 /* Common styling for all draggable windows */
 .analyzer,
 .window,
-.nowplaying,
-.dogframe,
-.workfuel {
+.now-playing,
+.dog-frame,
+.work-fuel {
   cursor: var(--pointer) !important; /* Use custom cursor */
   background: var(--windowBg); /* Apply complex window background */
   box-shadow: var(--windowShadow); /* Classic Mac window shadow */
@@ -85,7 +78,7 @@
   left: 0;
   width: 100%;
   height: 10px;
-  background: #222; /* Dark bar color */
+  background: var(--darkerGrey); /* Dark bar color */
   transform-origin: bottom; /* Scale from bottom up */
 }
 
@@ -131,7 +124,7 @@
 }
 
 /* Now Playing window - displays current track info and controls */
-.nowplaying {
+.now-playing {
   left: 27%;
   top: 15%;
   width: 300px;
@@ -145,7 +138,7 @@
 }
 
 /* Navigation buttons container (Prev/Next) */
-.nowplaying > div:last-of-type {
+.now-playing > div:last-of-type {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -153,55 +146,55 @@
 }
 
 /* Navigation button styling - classic Mac button appearance */
-.nowplaying > div:last-of-type button {
+.now-playing > div:last-of-type button {
   font-family: "Chicago", monospace;
   font-size: 12px;
   line-height: 1.5;
   width: calc(50% - 10px);
   border: none;
-  box-shadow: inset 0 0 0 1px #333, 0 0 0 2px #fff, 0 0 0 5px #333; /* 3D button effect */
+  box-shadow: inset 0 0 0 1px var(--midGrey), 0 0 0 2px var(--white), 0 0 0 5px var(--midGrey); /* 3D button effect */
   border-radius: 3px;
   cursor: var(--pointer);
 }
 
 /* Button hover effect */
-.nowplaying > div:last-of-type button:hover {
+.now-playing > div:last-of-type button:hover {
   background: var(--darkBg);
-  color: #fff;
+  color: var(--white);
 }
 
 /* Track info display container */
-.nowplaying > div:nth-of-type(2) {
+.now-playing > div:nth-of-type(2) {
   flex-grow: 1;
   padding: 10px;
   text-align: center;
 }
 
 /* Track info display box - dark background with inset border */
-.nowplaying > div:nth-of-type(2) > div {
+.now-playing > div:nth-of-type(2) > div {
   background: var(--darkBg); /* Dark dithered background */
   height: 50px;
   display: grid;
   place-content: center;
-  border: 2px inset #ccc; /* Inset border for 3D effect */
+  border: 2px inset var(--lightGrey); /* Inset border for 3D effect */
 }
 
 /* Track info text styling */
-.nowplaying h4 {
+.now-playing h4 {
   margin: 0;
   display: block;
-  color: #fff; /* White text for artist */
+  color: var(--white); /* White text for artist */
   font-size: 10px;
   line-height: 1.5;
 }
 
 /* Song title - slightly dimmed */
-.nowplaying h4:last-of-type {
-  color: #ccc;
+.now-playing h4:last-of-type {
+  color: var(--lightGrey);
 }
 
 /* Now Playing window background */
-.nowplaying:before {
+.now-playing:before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -213,7 +206,7 @@
 }
 
 /* Play button container */
-.nowplaying div:has(#play) {
+.now-playing div:has(#play) {
   width: 50px;
   height: 50px;
   position: relative;
@@ -222,38 +215,16 @@
   z-index: 2;
 }
 
-.overlay {
-  display: none; /* Completely hide the overlay */
-}
-
-.about-container {
-  position: fixed;
-  transform: translate(100%, -10%) scale(0.2);
-  opacity: 0;
-  z-index: 20;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  width: 80%;
-  max-width: 800px;
-  max-height: 80vh;
-}
-
-.about-container.active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
-}
-
 /* Play/Pause button - large square button with 3D effect */
 #play {
   position: absolute;
   opacity: 0.9;
   inset: 0;
   border: none;
-  background: #fff;
+  background: var(--white);
   cursor: var(--pointer);
-  box-shadow: inset 0 0 0 4px #000, inset 0 0 0 5px #fff,
-    inset 0 0 0 6px #000; /* Multiple inset shadows for 3D effect */
+  box-shadow: inset 0 0 0 4px var(--black), inset 0 0 0 5px var(--white),
+    inset 0 0 0 6px var(--black); /* Multiple inset shadows for 3D effect */
   overflow: hidden;
   border-radius: 8px;
   filter: url(#dither); /* Apply dithering filter */
@@ -266,9 +237,9 @@
 
 /* Playing state - shows pause icon (two vertical bars) */
 #play.playing span {
-  background: linear-gradient(to right, #000, #000) 15px 12.5px / 8px
+  background: linear-gradient(to right, var(--black), var(--black)) 15px 12.5px / 8px
       25px no-repeat,
-    linear-gradient(to right, #000, #000) calc(100% - 15px) 12.5px / 8px
+    linear-gradient(to right, var(--black), var(--black)) calc(100% - 15px) 12.5px / 8px
       25px no-repeat; /* Two vertical bars for pause icon */
   clip-path: none;
 }
@@ -277,13 +248,13 @@
 #play span {
   position: absolute;
   inset: 0;
-  background: #000;
+  background: var(--black);
   clip-path: polygon(35% 25%, 35% 75%, 80% 50%); /* Triangle shape */
   transition: opacity 0.2s ease-in-out;
 }
 
 /* Dog picture window - blank window */
-.dogframe {
+.dog-frame {
   left: 60%;
   top: 50%;
   width: 300px;
@@ -301,7 +272,7 @@
   position: relative;
   overflow: visible; /* Allow hearts to float outside */
   pointer-events: all;
-  border: 3px inset #ccc; /* Inset border for 3D depth effect */
+  border: 3px inset var(--lightGrey); /* Inset border for 3D depth effect */
   cursor: var(--pointer); /* Show pointer cursor on hover */
 }
 
@@ -339,7 +310,7 @@
 }
 
 /* Draggable area - title bar for moving the window */
-.dogframe .dragarea {
+.dog-frame .drag-area {
   position: absolute;
   pointer-events: all; /* Enable dragging only on title bar */
   z-index: 999;
@@ -350,7 +321,7 @@
 }
 
 /* Work Fuel window - blank window */
-.workfuel {
+.work-fuel {
   left: 60%;
   top: 10%;
   width: 280px;
@@ -362,7 +333,7 @@
 }
 
 /* Work Fuel window content frame - holds content */
-.workfuel .frame {
+.work-fuel .frame {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -384,7 +355,7 @@
   line-height: 1.5;
   padding: 2px 15px;
   border: none;
-  box-shadow: inset 0 0 0 1px #333, 0 0 0 2px #fff, 0 0 0 5px #333; /* 3D button effect */
+  box-shadow: inset 0 0 0 1px var(--midGrey), 0 0 0 2px var(--white), 0 0 0 5px var(--midGrey); /* 3D button effect */
   border-radius: 3px;
   cursor: var(--pointer);
   background: var(--lightBg); 
@@ -392,12 +363,12 @@
 
 .work-location-toggle button:hover {
   background: var(--darkBg);
-  color: #fff;
+  color: var(--white);
 }
 
 .work-location-toggle button.active {
   background: var(--darkBg);
-  color: #fff;
+  color: var(--white);
 }
 
 /* Work fuel content container */
@@ -450,12 +421,12 @@
 }
 
 /* Ensure all frame children use border-box sizing */
-.workfuel .frame * {
+.work-fuel .frame * {
   box-sizing: border-box;
 }
 
 /* Draggable area - title bar for moving the window */
-.workfuel .dragarea {
+.work-fuel .drag-area {
   position: absolute;
   pointer-events: all; /* Enable dragging only on title bar */
   z-index: 999;
@@ -493,7 +464,7 @@
 }
 
 /* Draggable area - title bar for moving the window */
-.window .dragarea {
+.window .drag-area {
   position: absolute;
   pointer-events: all; /* Enable dragging only on title bar */
   z-index: 999;
@@ -522,16 +493,16 @@
 .window ul li:has(.active) {
   background: radial-gradient(
       circle at center,
-      #ccc 0.5px,
-      #fff 0.5px,
-      #fff 2px
+      var(--lightGrey) 0.5px,
+      var(--white) 0.5px,
+      var(--white) 2px
     )
     0 0 / 2px 2px; /* Light dithered background for selection */
 }
 
 /* Track separator lines */
 .window ul li:not(:last-of-type) {
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid var(--extraLightGrey);
 }
 
 /* Track link styling - clickable track names */
@@ -541,7 +512,7 @@
   cursor: url("data:image/svg+xml,%3Csvg width='15' height='29' viewBox='0 0 90 114' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M42 3V6H45H48V21V36H54H60V39V42H66H72V45V48H78H84V51V54H87H90V69V84H87H84V90V96H81H78V105V114H75H72V105V96H75H78V90V84H81H84V69V54H78H72V51V48H66H60V45V42H51H42V24V6H36H30V36V66H27H24V60V54H21H18V51V48H12H6V51V54H9H12V60V66H15H18V75V84H21H24V90V96H27H30V99V102H33H36V108V114H33H30V108V102H27H24V99V96H21H18V90V84H15H12V75V66H9H6V60V54H3H0V48V42H9H18V45V48H21H24V27V6H27H30V3V0H36H42V3Z' fill='black'/%3E%3Cpath d='M72 114V105V96H75H78V90V84H81H84V69V54H78H72V51V48H66H60V45V42H51H42V24V6H36H30V36V66H27H24V60V54H21H18V51V48H12H6V51V54H9H12V60V66H15H18V75V84H21H24V90V96H27H30V99V102H33H36V108V114H72Z' fill='white'/%3E%3C/svg%3E%0A")
       16 16,
     pointer; /* Custom pointer cursor */
-  color: #000;
+  color: var(--black);
   opacity: 0.5; /* Dimmed for inactive tracks */
   position: relative;
   height: 18px;
@@ -555,7 +526,7 @@
   font-weight: 400;
   display: inline-block;
   margin-left: 5px;
-  color: #555; /* Slightly dimmed album titles */
+  color: var(--darkGrey); /* Slightly dimmed album titles */
 }
 
 /* Musical note icon - only visible for active track */
@@ -590,14 +561,14 @@
   position: absolute;
   font-family: "Chicago", monospace;
   font-size: 12px;
-  color: #000;
-  background: #fff;
+  color: var(--black);
+  background: var(--white);
   padding: 2px 6px;
-  border: 1px solid #000;
+  border: 1px solid var(--black);
   border-radius: 2px;
   pointer-events: none;
   z-index: 10000;
   white-space: nowrap;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 4px var(--shadowRGBA);
 }
 

@@ -189,7 +189,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
         // Function to bring a window to the front
         const bringToFront = (element) => {
           // Find the current highest z-index among all windows
-          const allWindows = document.querySelectorAll('.window, .nowplaying, .analyzer, .workfuel, .dogframe, .work-window, .education-window, .contact-window, .skills-window');
+          const allWindows = document.querySelectorAll('.window, .now-playing, .analyzer, .work-fuel, .dog-frame, .work-window, .education-window, .contact-window, .skills-window');
           let currentHighest = 0;
           allWindows.forEach(win => {
             const z = parseInt(window.getComputedStyle(win).zIndex) || 0;
@@ -476,7 +476,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
   const renderNowPlayingWindow = () => (
     <div
       id="nowPlayingWindow"
-      className="nowplaying"
+      className="now-playing"
       style={{ zIndex: zIndexAbout }}
     >
       <h3>Now Playing</h3>
@@ -539,10 +539,10 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
   const renderWorkFuelWindow = () => (
     <div
       id="workFuelWindow"
-      className="workfuel"
+      className="work-fuel"
       style={{ zIndex: zIndexAbout }}
     >
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Work Fuel</h3>
       <div className="frame">
         <div className="work-fuel-content">
@@ -698,9 +698,9 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
    */
   const renderDogFrameWindow = () => (
     <div id="dogFrame"
-      className="dogframe"
+      className="dog-frame"
       style={{ zIndex: zIndexAbout }}>
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Merlin</h3>
       <div
         className="dog-image-container"
@@ -748,11 +748,11 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ zIndex: zIndexAbout }}
     >
       {/* Draggable title bar */}
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Work Playlist</h3>
       <div className="frame">
         {/* Album artwork carousel */}
-        <div className="imgwrap">
+        <div className="img-wrap">
           {albumImages.map((img, index) => (
             <img
               key={index}
@@ -796,7 +796,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
     >
       {/* Draggable title bar */}
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Work History</h3>
       <div className="work-content">
         <h4>Software Developer</h4>
@@ -826,7 +826,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ display: showHistory ? 'block' : 'none', zIndex: zIndexHistory }}
     >
       {/* Draggable title bar */}
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Education</h3>
       <div className="education-content">
         <h4>Bachelor of Science (BSc)</h4>
@@ -851,7 +851,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ display: showContact ? 'block' : 'none', zIndex: zIndexContact }}
     >
       {/* Draggable title bar */}
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Contact</h3>
       <div className="contact-content">
         <div className="contact-email-row">
@@ -894,7 +894,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       style={{ display: showSkills ? 'block' : 'none', zIndex: zIndexSkills }}
     >
       {/* Draggable title bar */}
-      <div className="dragarea"></div>
+      <div className="drag-area"></div>
       <h3>Skills</h3>
       <div className="skills-content">
         <Skills />
@@ -942,7 +942,7 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
     <div style={{ position: 'static', width: '100%', height: '100%' }}>
 
       {/* About windows container - Now Playing, Visualiser and Work Fuel windows */}
-      <div className="aboutWindows" style={{ display: showAbout ? 'block' : 'none' }}>
+      <div className="about-windows" style={{ display: showAbout ? 'block' : 'none' }}>
         {renderNowPlayingWindow()}
         {renderVisualizerWindow()}
         {renderWorkFuelWindow()}
@@ -951,18 +951,18 @@ const Windows = ({ showAbout = false, showHistory = false, showContact = false, 
       </div>
 
       {/* History windows container - Work History and Education History windows */}
-      <div className="historyWindows" style={{ display: showHistory ? 'block' : 'none' }}>
+      <div className="history-windows" style={{ display: showHistory ? 'block' : 'none' }}>
         {renderWorkHistoryWindow()}
         {renderEducationHistoryWindow()}
       </div>
 
       {/* Contact window container - Contact window */}
-      <div className="contactWindows" style={{ display: showContact ? 'block' : 'none' }}>
+      <div className="contact-windows" style={{ display: showContact ? 'block' : 'none' }}>
         {renderContactWindow()}
       </div>
 
       {/* Skills window container - Skills window */}
-      <div className="skillsWindows" style={{ display: showSkills ? 'block' : 'none' }}>
+      <div className="skills-windows" style={{ display: showSkills ? 'block' : 'none' }}>
         {renderSkillsWindow()}
       </div>
 
